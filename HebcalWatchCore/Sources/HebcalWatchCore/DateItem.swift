@@ -36,6 +36,9 @@ public struct DateItem: Hashable, Codable, Identifiable {
     public var hdate: String
     public var parsha: String?
     public var holidays: [String]
+    /// `holidays` abbreviated ("R.Ch. Cheshvan"), for when a name won't fit
+    /// on one line.
+    public var holidaysShort: [String]
     public var emoji: String?
     public var omer: String?
     public var dafyomi: String?
@@ -48,7 +51,8 @@ public struct DateItem: Hashable, Codable, Identifiable {
     public init(id: Int, lang: TranslationLang, dow: String, gregDay: Int, gregMonth: String,
                 gregYear: Int, hdate: String, parsha: String?, holidays: [String],
                 emoji: String?, omer: String?, dafyomi: String?,
-                zmanim: [ZmanEvent] = [], detail: DateItemDetail? = nil) {
+                zmanim: [ZmanEvent] = [], detail: DateItemDetail? = nil,
+                holidaysShort: [String]? = nil) {
         self.id = id
         self.lang = lang
         self.dow = dow
@@ -58,6 +62,7 @@ public struct DateItem: Hashable, Codable, Identifiable {
         self.hdate = hdate
         self.parsha = parsha
         self.holidays = holidays
+        self.holidaysShort = holidaysShort ?? holidays
         self.emoji = emoji
         self.omer = omer
         self.dafyomi = dafyomi
@@ -125,7 +130,8 @@ extension HebcalFormatter {
             zmanim: zmanim.filter { zman in
                 zman.kind != .chanukah || !zmanim.contains { $0.kind != .chanukah && $0.time == zman.time }
             },
-            detail: zmanimDetail.map(DateItemDetail.zmanim) ?? omerDetail(on: hdate).map(DateItemDetail.omer)
+            detail: zmanimDetail.map(DateItemDetail.zmanim) ?? omerDetail(on: hdate).map(DateItemDetail.omer),
+            holidaysShort: events.map { holidayName($0, abbreviated: true) }
         )
     }
 

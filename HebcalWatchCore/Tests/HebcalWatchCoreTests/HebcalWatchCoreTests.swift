@@ -492,6 +492,13 @@ extension HebcalWatchCoreTests {
                 .contains { $0.gregMonth == "Nov" && $0.gregDay == 6 })
         }
 
+        @Test func dateItemHasAbbreviatedHolidays() {
+            let item = formatter().dateItem(for: date(2026, 10, 12), calendar: calendar,
+                                            now: date(2026, 10, 12), showYear: false, forceParsha: false)
+            #expect(item.holidays == ["Rosh Chodesh Cheshvan"])
+            #expect(item.holidaysShort == ["R.Ch. Cheshvan"])
+        }
+
         @Test func omerFridayLinksToOmer() throws {
             let item = zmanimFormatter().dateItem(for: date(2027, 4, 23), calendar: calendar,
                                                   now: date(2027, 4, 23), showYear: false, forceParsha: false)
