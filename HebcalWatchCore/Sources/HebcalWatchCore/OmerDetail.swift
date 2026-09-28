@@ -31,6 +31,12 @@ public struct OmerDetail: Hashable, Codable, Sendable {
     /// The card is in Hebrew (title and headings right-aligned).
     public var isHebrew: Bool
     public var sections: [Section]
+
+    /// "Omer: 13th day", short enough for one line on a button; the Hebrew
+    /// title is already short.
+    public var shortTitle: String {
+        isHebrew ? title : "Omer: \(day)\(HebcalFormatter.ordinalSuffix(day)) day"
+    }
 }
 
 extension HebcalFormatter {
