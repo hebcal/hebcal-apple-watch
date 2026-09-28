@@ -167,7 +167,8 @@ extension HebcalFormatter {
     }
 
     /// Candle-lighting, Havdalah and Chanukah candle times on the civil day
-    /// of `hdate`, in time order. Empty without a location.
+    /// of `hdate`, in time order, Shabbat's before Chanukah's when they
+    /// coincide. Empty without a location.
     ///
     /// - Friday, or erev Shabbat/Yom Tov: candle lighting before sunset.
     /// - The second night of Yom Tov, or Yom Tov starting Saturday night
@@ -208,7 +209,8 @@ extension HebcalFormatter {
         if let candles {
             events.append(candles)
         }
-        return events.sorted { $0.time < $1.time }
+        // At the same time, Shabbat's candles or Havdalah before Chanukah's.
+        return events.sorted { ($0.time, $0.kind == .chanukah ? 1 : 0) < ($1.time, $1.kind == .chanukah ? 1 : 0) }
     }
 
     /// Port of `makeCandleEvent()`: candle lighting or Havdalah for holiday

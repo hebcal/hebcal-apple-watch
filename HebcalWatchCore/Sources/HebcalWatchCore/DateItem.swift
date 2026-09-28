@@ -40,6 +40,8 @@ public struct DateItem: Hashable, Codable, Identifiable {
     public var omer: String?
     public var dafyomi: String?
     /// Candle lighting, Havdalah, Chanukah candles; empty without a location.
+    /// On Shabbat of Chanukah the Chanukah time is left out, since it's the
+    /// same as the candle lighting or Havdalah time (the detail card has both).
     public var zmanim: [ZmanEvent]
     public var detail: DateItemDetail?
 
@@ -89,6 +91,7 @@ extension HebcalFormatter {
         let events = holidays(on: hdate)
         let currentYear = calendar.component(.year, from: now)
         let zmanimDetail = zmanimDetail(on: hdate, calendar: calendar)
+        let zmanim = zmanimDetail?.events ?? []
         return DateItem(
             id: (hdate.yy * 10000) + (hdate.mm.rawValue * 100) + hdate.dd,
             lang: lang,
@@ -102,7 +105,9 @@ extension HebcalFormatter {
             emoji: Self.emoji(for: events),
             omer: omer(on: hdate),
             dafyomi: settings.dafyomi ? dafYomi(on: date) : nil,
-            zmanim: zmanimDetail?.events ?? [],
+            zmanim: zmanim.filter { zman in
+                zman.kind != .chanukah || !zmanim.contains { $0.kind != .chanukah && $0.time == zman.time }
+            },
             detail: zmanimDetail.map(DateItemDetail.zmanim) ?? omerDetail(on: hdate).map(DateItemDetail.omer)
         )
     }

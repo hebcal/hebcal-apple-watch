@@ -401,8 +401,8 @@ extension HebcalWatchCoreTests {
             (2026, 10, 3, ["candleLighting 2026-10-03T23:15:00Z"]),   // Shabbat → Shmini Atzeret
             // Chanukah on Friday: with Shabbat candles; Saturday: after Havdalah;
             // weekdays: bein hashmashot.
-            (2026, 12, 4, ["chanukah 2026-12-04T21:10:00Z", "candleLighting 2026-12-04T21:10:00Z"]),
-            (2026, 12, 5, ["chanukah 2026-12-05T22:14:00Z", "havdalah 2026-12-05T22:14:00Z"]),
+            (2026, 12, 4, ["candleLighting 2026-12-04T21:10:00Z", "chanukah 2026-12-04T21:10:00Z"]),
+            (2026, 12, 5, ["havdalah 2026-12-05T22:14:00Z", "chanukah 2026-12-05T22:14:00Z"]),
             (2026, 12, 7, ["chanukah 2026-12-07T21:52:00Z"]),
             (2026, 12, 12, ["havdalah 2026-12-12T22:14:00Z"]),
             (2026, 12, 13, []),
@@ -426,8 +426,8 @@ extension HebcalWatchCoreTests {
         @Test func titles() throws {
             let friday = HDate(date: date(2026, 12, 4), calendar: calendar)
             #expect(zmanimFormatter().candleTimes(on: friday, calendar: calendar).map(\.title)
-                    == ["Chanukah: 1 Candle", "Candle lighting"])
-            #expect(zmanimFormatter(.he).candleTimes(on: friday.next(), calendar: calendar).last?.title == "הבדלה")
+                    == ["Candle lighting", "Chanukah: 1 Candle"])
+            #expect(zmanimFormatter(.he).candleTimes(on: friday.next(), calendar: calendar).first?.title == "הבדלה")
         }
 
         @Test func nothingWithoutLocation() {
@@ -496,6 +496,23 @@ extension HebcalWatchCoreTests {
                                                   now: date(2027, 4, 23), showYear: false, forceParsha: false)
             #expect(item.zmanim.map(\.kind) == [.candleLighting])
             #expect(item.detail?.omer != nil)
+        }
+
+        @Test func chanukahShabbatRowShowsOnlyShabbatTime() throws {
+            let f = zmanimFormatter()
+            func item(_ d: Int) -> DateItem {
+                f.dateItem(for: date(2026, 12, d), calendar: calendar,
+                           now: date(2026, 12, d), showYear: false, forceParsha: false)
+            }
+            #expect(item(4).zmanim.map(\.kind) == [.candleLighting])
+            #expect(item(5).zmanim.map(\.kind) == [.havdalah])
+            #expect(item(7).zmanim.map(\.kind) == [.chanukah])
+            // The detail card still has both.
+            guard case .zmanim(let detail) = item(4).detail else {
+                Issue.record("expected a zmanim detail")
+                return
+            }
+            #expect(detail.events.map(\.kind) == [.candleLighting, .chanukah])
         }
 
         @Test func entryShowsCandlesUntilSunsetThenHavdalah() {
