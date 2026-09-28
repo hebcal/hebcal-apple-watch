@@ -116,7 +116,7 @@ public struct ZmanEvent: Hashable, Codable, Sendable {
 /// The card for a day with candle times: the times, sunset, and a link to
 /// the Omer card on a day of the Omer.
 public struct ZmanimDetail: Hashable, Codable, Sendable {
-    /// The Gregorian date, e.g. "Fri, 2 October" (or "ו׳, 2 באוקטובר" in Hebrew).
+    /// The Gregorian date, e.g. "Fri, 2 October" (or "שישי, 2 אוקטובר" in Hebrew).
     public var title: String
     public var events: [ZmanEvent]
     public var sunset: Date?
@@ -252,17 +252,18 @@ extension HebcalFormatter {
             return nil
         }
         let noon = abs2greg(absdate: hdate.abs(), calendar: calendar).addingTimeInterval(12 * 60 * 60)
-        let formatter = DateFormatter()
-        formatter.calendar = calendar
-        formatter.timeZone = calendar.timeZone
+        let title: String
         if isHebrew {
-            formatter.locale = Locale(identifier: "he")
-            formatter.setLocalizedDateFormatFromTemplate("EEEd MMMM")
+            title = hebrewGregorianTitle(for: noon, calendar: calendar)
         } else {
+            let formatter = DateFormatter()
+            formatter.calendar = calendar
+            formatter.timeZone = calendar.timeZone
             formatter.locale = Locale(identifier: "en_US_POSIX")
             formatter.dateFormat = "EEE, d MMMM"
+            title = formatter.string(from: noon)
         }
-        return ZmanimDetail(title: formatter.string(from: noon), events: events,
+        return ZmanimDetail(title: title, events: events,
                             sunset: sunset(on: noon, calendar: calendar),
                             omer: omerDetail(on: hdate), isHebrew: isHebrew)
     }

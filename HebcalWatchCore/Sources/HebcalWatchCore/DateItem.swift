@@ -75,7 +75,17 @@ private let shortMonth = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 private let shortMonthHe = ["", "ינו", "פבר", "מרץ", "אפר", "מאי", "יונ",
                             "יול", "אוג", "ספט", "אוק", "נוב", "דצמ"]
 
+private let longMonthHe = ["", "ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני",
+                           "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"]
+
 extension HebcalFormatter {
+    /// A Hebrew Gregorian date like "שישי, 2 אוקטובר": the weekday as in
+    /// `DateItem.dow`, with the full month name.
+    func hebrewGregorianTitle(for date: Date, calendar: Calendar) -> String {
+        let c = calendar.dateComponents([.weekday, .month, .day], from: date)
+        return "\(dayOfWeekHe[c.weekday!]), \(c.day!) \(longMonthHe[c.month!])"
+    }
+
     /// The row for Gregorian day `date`. The Gregorian year is shown when
     /// `showYear` is set or when it differs from the year of `now`; the
     /// Hebrew year when `showYear` is set or on Rosh Hashana. The parsha is
