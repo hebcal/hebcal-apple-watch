@@ -147,6 +147,7 @@ extension HebcalWatchCoreTests {
             let detail = try #require(formatter().omerDetail(on: HDate(yy: 5787, mm: .IYYAR, dd: 13)))
             #expect(detail.day == 28)
             #expect(detail.title == "28th day of the Omer")
+            #expect(detail.shortTitle == "Omer: 28th day")
             #expect(!detail.isHebrew)
             #expect(detail.sections.map(\.heading) ==
                     ["Count", "Sefirah", "Psalm 67 word", "Psalm 67:5 letter", "Ana BeKoach"])

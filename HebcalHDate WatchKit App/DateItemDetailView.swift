@@ -77,7 +77,9 @@ struct ZmanimDetailView: View {
                 if let omer = zmanim.omer {
                     NavigationLink(value: DateItemDetail.omer(omer)) {
                         Label {
-                            Text(omer.title)
+                            Text(omer.shortTitle)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
                         } icon: {
                             Text("🌾")
                         }
