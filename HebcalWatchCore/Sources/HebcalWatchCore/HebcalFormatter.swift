@@ -81,10 +81,24 @@ public final class HebcalFormatter {
             ?? lookupTranslation(str: holidayReplacingParsha(on: hdate), lang: lang)
     }
 
+    /// The emoji of the holiday whose reading replaces the weekly parsha on
+    /// the Shabbat on or after `hdate` (e.g. 🍏🍯 for Rosh Hashana), or nil
+    /// when there's a weekly parsha or that holiday has no emoji of its own.
+    public func holidayEmojiReplacingParsha(on hdate: HDate) -> String? {
+        guard parsha(on: hdate) == nil else {
+            return nil
+        }
+        return holidays(on: Self.shabbat(onOrAfter: hdate)).lazy.compactMap(\.emoji).first
+    }
+
+    private static func shabbat(onOrAfter hdate: HDate) -> HDate {
+        return HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: hdate.abs() + 6))
+    }
+
     /// The (untranslated) holiday whose reading replaces the weekly parsha
     /// on the Shabbat on or after `hdate`.
     private func holidayReplacingParsha(on hdate: HDate) -> String {
-        let saturday = HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: hdate.abs() + 6))
+        let saturday = Self.shabbat(onOrAfter: hdate)
         switch saturday.mm {
         case .TISHREI:
             switch saturday.dd {
@@ -131,7 +145,7 @@ public final class HebcalFormatter {
         guard specialShabbat else {
             return nil
         }
-        let saturday = HDate(absdate: dayOnOrBefore(dayOfWeek: .SAT, absdate: hdate.abs() + 6))
+        let saturday = Self.shabbat(onOrAfter: hdate)
         return self.holidays(on: saturday).first(where: { $0.flags.contains(.SPECIAL_SHABBAT) })
     }
 

@@ -34,6 +34,9 @@ public struct HebcalEntry {
     //   displaces it (e.g. "Sukkot").
     public let parshaShowsHoliday: Bool    // true when a holiday of today replaces the parsha
     public let parshaParts: [String]       // 1 or 2 elements for stacked layouts
+    // Shown below a one-line holiday in place of the Torah icon: "Purim"
+    // with 🎭️📜, or "R.H." with 🍏🍯 the week before Rosh Hashana.
+    public let parshaEmoji: String?
     public let parshaPrefixed: String      // "Parashat Behar-Bechukotai", or the holiday name on a holiday
     public let parshaShort: String         // "Behar-Bechukotai", or the abbreviated holiday name
 
@@ -90,6 +93,10 @@ extension HebcalEntry {
             : formatter.holidayToDisplay(on: hdate, specialShabbat: false)
         let holidayTodayName = holidayToday.map { formatter.holidayName($0, abbreviated: false) }
         let holidayTodayShort = holidayToday.map { formatter.holidayName($0, abbreviated: true) }
+        // The holiday that replaces the upcoming Shabbat's parsha, shortened
+        // ("R.H.") for the Parsha circular face.
+        let fallbackShort = Abbreviations.holiday[Abbreviations.tableKey(parshaForFallback)]
+            ?? parshaForFallback
 
         // Inline: date tiers, each followed by today's holiday or the parsha.
         let inlineExtra = holidayTodayShort ?? parshaName
@@ -122,7 +129,9 @@ extension HebcalEntry {
         self.parshaShowsHoliday = holidayToday != nil
         self.parshaParts = holidayTodayShort.map { Abbreviations.splitParsha($0) }
             ?? parshaName.map { Abbreviations.splitParsha($0) }
-            ?? [parshaForFallback]
+            ?? [fallbackShort]
+        self.parshaEmoji = holidayToday != nil ? holidayToday?.emoji
+            : formatter.holidayEmojiReplacingParsha(on: hdate)
         self.parshaPrefixed = holidayTodayName ?? "\(parshaPrefix) \(parshaForFallback)"
         self.parshaShort = holidayTodayShort ?? parshaForFallback
         self.richHoliday = richHoliday

@@ -14,6 +14,7 @@
 
 import SwiftUI
 import WidgetKit
+import Hebcal
 import HebcalWatchCore
 
 private let goldTint = Color(red: 1.0, green: 0.75, blue: 0.0)
@@ -141,22 +142,39 @@ struct ParshaCircularView: View {
     // Starting sizes; minimumScaleFactor shrinks long names to fit the circle.
     @ScaledMetric private var holidayFontSize: CGFloat = 24
     @ScaledMetric private var singleLineFontSize: CGFloat = 17
-    @ScaledMetric private var twoLineFontSize: CGFloat = 13
+    // Two-line sizes as fractions of the circle's diameter, so they suit
+    // every watch size: the largest font (short lines like "Ki" or "ד׳"),
+    // and the inset that keeps long lines clear of the circle's edges.
+    private let twoLineFontFraction: CGFloat = 0.34
+    private let twoLineInsetFraction: CGFloat = 0.17
+    private let emojiAboveFontFraction: CGFloat = 0.34
+    @ScaledMetric private var emojiFontSize: CGFloat = 13
 
     var body: some View {
         switch ParshaCircularLayout(entry: entry) {
         case let .twoLines(first, second):
-            VStack(spacing: 0) {
-                Text(first)
-                    .font(.system(size: twoLineFontSize, weight: .semibold))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
-                Text(second)
-                    .font(.system(size: twoLineFontSize, weight: .semibold))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.5)
+            // Each line is sized on its own, so a short one such as "ד׳"
+            // under "חנוכה" stays large while only a long one shrinks.
+            GeometryReader { geometry in
+                let diameter = min(geometry.size.width, geometry.size.height)
+                VStack(spacing: 0) {
+                    fittedLine(first, diameter: diameter, alignment: .bottom)
+                    fittedLine(second, diameter: diameter, alignment: .top)
+                }
             }
             .widgetAccentable()
+        case let .emojiAbove(emoji, text):
+            GeometryReader { geometry in
+                let diameter = min(geometry.size.width, geometry.size.height)
+                VStack(spacing: 0) {
+                    Text(emoji)
+                        .font(.system(size: diameter * emojiAboveFontFraction))
+                        .lineLimit(1)
+                        .frame(maxHeight: .infinity, alignment: .bottom)
+                    fittedLine(text, diameter: diameter, alignment: .top)
+                        .widgetAccentable()
+                }
+            }
         case let .holiday(name):
             // Today is itself a one-word holiday (e.g. "Y.K."): show just its
             // name, with no Torah icon (it isn't a Shabbat Torah reading).
@@ -166,6 +184,19 @@ struct ParshaCircularView: View {
                 .minimumScaleFactor(0.3)
                 .padding(.horizontal, 2)
                 .widgetAccentable()
+        case let .holidayWithEmoji(name, emoji):
+            // Like a one-line parsha, with the holiday's emoji for the icon.
+            VStack(spacing: 1) {
+                Text(name)
+                    .font(.system(size: singleLineFontSize, weight: .semibold))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.3)
+                    .padding(.horizontal, 5)
+                    .widgetAccentable()
+                Text(emoji)
+                    .font(.system(size: emojiFontSize))
+                    .lineLimit(1)
+            }
         case let .parsha(name):
             // Single-line parsha: fill the second line with a Torah icon
             VStack(spacing: 1) {
@@ -184,6 +215,19 @@ struct ParshaCircularView: View {
             }
             .widgetAccentable()
         }
+    }
+
+    /// One of two stacked lines, sized on its own: as large as fits the
+    /// width, up to twoLineFontFraction of the circle. Aligned toward the
+    /// center, where the circle is widest, and inset so its edges don't
+    /// clip long lines such as "Vayeilech" or a large "Purim".
+    private func fittedLine(_ text: String, diameter: CGFloat, alignment: Alignment) -> some View {
+        Text(text)
+            .font(.system(size: diameter * twoLineFontFraction, weight: .semibold))
+            .lineLimit(1)
+            .minimumScaleFactor(0.3)
+            .padding(.horizontal, diameter * twoLineInsetFraction)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)
     }
 }
 
@@ -418,5 +462,149 @@ private func previewNoon(year: Int, month: Int, day: Int) -> Date {
     HebcalProvider.entry(for: previewNoon(year: 2027, month: 3, day: 24))
 }
 
+// MARK: Parsha circular, one per layout and language
+//
+// These pass explicit settings rather than the saved ones, so Hebrew and
+// Israel cases can be previewed side by side. Every date is also a row in
+// the golden files (Snapshots/parsha-circular-*.md).
 
+private func parshaPreview(_ year: Int, _ month: Int, _ day: Int,
+                           lang: TranslationLang = .en, il: Bool = false) -> HebcalEntry {
+    HebcalProvider.entry(for: previewNoon(year: year, month: month, day: day),
+                         settings: HebcalSettings(il: il, lang: lang))
+}
+
+// The week before Rosh Hashana: abbreviated, with its emoji below.
+#Preview("Parsha circular R.H. week", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 9, 7)
+}
+
+#Preview("Parsha circular R.H. week (he)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 9, 7, lang: .he)
+}
+
+#Preview("Parsha circular Pesach week", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 4, 18)
+}
+
+// A one-word holiday with an emoji; Y.K. has none, so it stays large text.
+#Preview("Parsha circular Purim", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 3, 23)
+}
+
+#Preview("Parsha circular Purim (he)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 3, 23, lang: .he)
+}
+
+#Preview("Parsha circular Y.K. (he)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 9, 21, lang: .he)
+}
+
+// Chanukah day 4: "🕎" / "Day 4️⃣" and "חנוכה" / "ד׳".
+#Preview("Parsha circular Chanukah day 4", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 12, 8)
+}
+
+#Preview("Parsha circular Chanukah day 4 (he)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 12, 8, lang: .he)
+}
+
+// The same abbreviation on one line: "28 Kislev · 🕎 Day 4️⃣".
+#Preview("Hebcal inline Chanukah day 4", as: .accessoryInline) {
+    HebcalWidget()
+} timeline: {
+    parshaPreview(2026, 12, 8)
+}
+
+#Preview("Hebcal inline Chanukah day 4 (he)", as: .accessoryInline) {
+    HebcalWidget()
+} timeline: {
+    parshaPreview(2026, 12, 8, lang: .he)
+}
+
+// Two-word Hebrew parshiyot short enough for one line (parshaOneLine).
+#Preview("Parsha circular Lech-Lecha (he)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 10, 19, lang: .he)
+}
+
+#Preview("Parsha circular Ki Tisa (he)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 2, 23, lang: .he)
+}
+
+#Preview("Parsha circular Sh'lach 2027", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 6, 28)
+}
+
+#Preview("Parsha circular Bereshit (he)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 10, 5, lang: .he)
+}
+
+// Two short lines, each as large as fits half the circle.
+#Preview("Parsha circular Tu B'Av (he)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 8, 18, lang: .he)
+}
+
+#Preview("Parsha circular Tish'a B'Av", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 8, 12)
+}
+
+#Preview("Parsha circular Lag BaOmer (he)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 5, 25, lang: .he)
+}
+
+// Long lines, which shrink to fit the width without clipping.
+#Preview("Parsha circular Nitzavim-Vayeilech", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 9, 2)
+}
+
+#Preview("Parsha circular Shushan Purim", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 3, 24)
+}
+
+#Preview("Parsha circular R.Ch. Kislev (he)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 11, 11, lang: .he)
+}
+
+// Israel: a civic day with no nikud once hebcal-swift 425ef8f is in.
+#Preview("Parsha circular Herzl Day (he, Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 5, 17, lang: .he, il: true)
+}
 #endif

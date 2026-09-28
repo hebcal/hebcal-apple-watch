@@ -54,6 +54,16 @@ enum Abbreviations {
         "יום כפור": "יוה״כ",
         "ראש השנה למעשר בהמה": "ראה״ש לבהמות",
         "סוכות ז׳ (הושענא רבה)": "הושענא רבה",
+        // Hebrew Chanukah counts days like the English, not candles
+        "חנוכה: א׳ נר": "חנוכה א׳ נר",
+        "חנוכה: ב׳ נרות": "חנוכה א׳",
+        "חנוכה: ג׳ נרות": "חנוכה ב׳",
+        "חנוכה: ד׳ נרות": "חנוכה ג׳",
+        "חנוכה: ה׳ נרות": "חנוכה ד׳",
+        "חנוכה: ו׳ נרות": "חנוכה ה׳",
+        "חנוכה: ז׳ נרות": "חנוכה ו׳",
+        "חנוכה: ח׳ נרות": "חנוכה ז׳",
+        "חנוכה: יום ח׳": "חנוכה ח׳",
     ]
 
     // Two-line stack abbreviations (graphic circular, modular small, etc.).
@@ -131,7 +141,7 @@ enum Abbreviations {
         "Pekudei": ["Peku-", "dei"],
         "Pinchas": ["Pin-", "chas"],
         "Re'eh": nil,
-        "Sh'lach": ["Sh’", "lach"],
+        "Sh'lach": nil,
         "Shemot": nil,
         "Shmini": nil,
         "Shoftim": ["Shof-", "tim"],
@@ -163,12 +173,25 @@ enum Abbreviations {
         "Yisro": nil,
     ]
 
+    /// Two-word Hebrew parsha names narrow enough to stay on one line,
+    /// no wider than the widest one-word names such as "בהעלתך".
+    static let parshaOneLine: Set<String> = [
+        "כי תשא",
+        "כי־תצא",
+        "לך־לך",
+        "שלח־לך",
+    ]
+
     private static let splitDelimiters: [Character] = ["-", "־", " "] // dash, maqaf, space
 
     /// Splits a parsha (or holiday) name into one or two lines for stacked
     /// layouts: at the first dash, maqaf or space if there is one, otherwise
-    /// at the hyphenation point in `parshaHyphenation`.
+    /// at the hyphenation point in `parshaHyphenation`. Names in
+    /// `parshaOneLine` aren't split.
     static func splitParsha(_ parsha: String) -> [String] {
+        if parshaOneLine.contains(parsha) {
+            return [parsha]
+        }
         for delim in splitDelimiters {
             if let idx = parsha.firstIndex(of: delim) {
                 return [String(parsha[..<idx]), String(parsha[parsha.index(after: idx)...])]

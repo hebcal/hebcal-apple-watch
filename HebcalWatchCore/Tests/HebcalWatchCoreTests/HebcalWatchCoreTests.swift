@@ -47,7 +47,10 @@ extension HebcalWatchCoreTests {
             ("Bereshit", ["Bere-", "sheet"]),                    // hyphenation table
             ("Bereshis", ["Bere-", "shis"]),                     // Ashkenazi entry
             ("Beha’alotcha", ["Behaa", "lotcha"]),               // ’ from lookupTranslation
-            ("Sh’lach", ["Sh’", "lach"]),
+            ("Sh’lach", ["Sh’lach"]),                            // nil in table: fits
+            ("כי תשא", ["כי תשא"]),                              // parshaOneLine
+            ("שלח־לך", ["שלח־לך"]),
+            ("חיי שרה", ["חיי", "שרה"]),
             ("Noach", ["Noach"]),                                // nil in table: fits
             ("Vayechi", ["Vayechi"]),
             ("נח", ["נח"]),                                      // not in table
@@ -161,7 +164,10 @@ extension HebcalWatchCoreTests {
             (2026, 9, 21, TranslationLang.en, ParshaCircularLayout.holiday("Y.K.")),
             (2026, 9, 21, .he, .holiday("יוה״כ")),
             // Day after YK: the upcoming Shabbat's holiday reading.
-            (2026, 9, 22, .en, .parsha("Sukkot")),
+            (2026, 9, 22, .en, .holidayWithEmoji("Sukkot", "🌿🍋")),
+            // The week before Rosh Hashana: abbreviated, with its emoji.
+            (2026, 9, 7, .en, .holidayWithEmoji("R.H.", "🍏🍯")),
+            (2026, 9, 7, .he, .holidayWithEmoji("ראה״ש", "🍏🍯")),
             // Shabbat Shuva on Shabbat itself: the weekly parsha.
             (2026, 9, 19, .en, .twoLines("Ha’", "azinu")),
             // Rosh Chodesh Kislev on a weekday: the holiday.
@@ -169,11 +175,22 @@ extension HebcalWatchCoreTests {
             (2026, 10, 15, .en, .parsha("Noach")),
             (2026, 12, 25, .en, .parsha("Vayechi")),
             (2027, 3, 22, .en, .twoLines("Erev", "Purim")),
-            (2027, 3, 23, .en, .holiday("Purim")),
+            (2027, 3, 23, .en, .holidayWithEmoji("Purim", "🎭️📜")),
+            (2026, 12, 7, .en, .emojiAbove("🕎", "Day 3️⃣")),
+            (2026, 12, 7, .he, .twoLines("חנוכה", "ג׳")),
+            (2027, 2, 22, .he, .parsha("כי תשא")),
             (2027, 3, 24, .en, .twoLines("Shushan", "Purim")),
         ])
         func parshaCircularLayout(y: Int, m: Int, d: Int, lang: TranslationLang, expected: ParshaCircularLayout) {
             #expect(ParshaCircularLayout(entry: entry(y, m, d, lang)) == expected)
+        }
+
+        @Test(arguments: [
+            ("🕎", true), ("🍏🍯", true),
+            ("Day 4️⃣", false), ("4", false), ("חנוכה", false), ("", false),
+        ])
+        func isEmojiOnly(text: String, expected: Bool) {
+            #expect(ParshaCircularLayout.isEmojiOnly(text) == expected)
         }
 
         @Test func inlineText() {

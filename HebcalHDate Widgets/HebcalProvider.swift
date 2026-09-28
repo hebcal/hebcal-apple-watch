@@ -40,8 +40,8 @@ struct HebcalProvider: TimelineProvider {
         return HebcalSettings(defaults: HebcalSettings.appGroupDefaults)
     }
 
-    static func entry(for date: Date) -> HebcalEntry {
-        return HebcalEntry.entries(at: [date], settings: currentSettings())[0]
+    static func entry(for date: Date, settings: HebcalSettings = currentSettings()) -> HebcalEntry {
+        return HebcalEntry.entries(at: [date], settings: settings)[0]
     }
 
     private static let calendar: Calendar = {
