@@ -122,7 +122,13 @@ struct HebcalRectangularView: View {
                         .foregroundColor(goldTint)
                 }
             }
-            if let omer = entry.omerToday {
+            // A candle time takes the Omer's line: there's no room for both.
+            if let zman = entry.zmanim.first {
+                Text("\(entry.zmanim.map(\.emoji).joined()) \(zman.time, format: .dateTime.hour().minute())")
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+                    .foregroundColor(.orange)
+            } else if let omer = entry.omerToday {
                 Text(omer)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
@@ -337,6 +343,25 @@ private func previewNoon(year: Int, month: Int, day: Int) -> Date {
     HebcalWidget()
 } timeline: {
     HebcalProvider.entry(for: previewNoon(year: 2026, month: 12, day: 10))
+}
+
+/// Settings with a location in the preview's time zone (New York
+/// coordinates), so candle times show.
+private let previewZmanimSettings = HebcalSettings(useLocation: true, location: GeoPoint(
+    latitude: 40.71, longitude: -74.01, timeZoneIdentifier: TimeZone.current.identifier))
+
+// Friday of Chanukah: Chanukah and Shabbat candles at the same time.
+#Preview("Chanukah Friday candles — Rectangular", as: .accessoryRectangular) {
+    HebcalWidget()
+} timeline: {
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 12, day: 4), settings: previewZmanimSettings)
+}
+
+// A Friday of the Omer: candle lighting takes the Omer's line.
+#Preview("Omer Friday candles — Rectangular", as: .accessoryRectangular) {
+    HebcalWidget()
+} timeline: {
+    HebcalProvider.entry(for: previewNoon(year: 2027, month: 4, day: 23), settings: previewZmanimSettings)
 }
 
 #Preview("Pesach VI (CH’’M) — Rectangular", as: .accessoryRectangular) {

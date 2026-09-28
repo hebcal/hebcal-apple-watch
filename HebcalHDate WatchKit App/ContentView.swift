@@ -13,7 +13,7 @@ import os
 /// value-based: a `NavigationLink(value:)` inside a screen pushed with
 /// `NavigationLink(destination:)` pops right back off.
 enum Screen: Hashable {
-    case calendar, settings
+    case calendar, settings, zmanim
 }
 
 struct ContentView: View {
@@ -24,10 +24,10 @@ struct ContentView: View {
     /// linking to its card.
     private var omerLink: (detail: DateItemDetail, label: String)? {
         let today = modelData.todayDateItem
-        guard let detail = today.detail, case .omer = detail, let label = today.omer else {
+        guard let omer = today.detail?.omer, let label = today.omer else {
             return nil
         }
-        return (detail, label)
+        return (.omer(omer), label)
     }
 
     var body: some View {
@@ -55,6 +55,7 @@ struct ContentView: View {
                 switch screen {
                 case .calendar: HDateList()
                 case .settings: SettingsView()
+                case .zmanim: ZmanimSettingsView()
                 }
             }
             .navigationDestination(for: DateItemDetail.self) { detail in
@@ -68,6 +69,7 @@ struct ContentView: View {
             case .active:
                 Logger.app.debug("Scene became active.")
                 modelData.updateDateItems()
+                modelData.refreshLocation()
             case .background:
                 Logger.app.debug("Scene moved to the background.")
                 // Schedule a background refresh task

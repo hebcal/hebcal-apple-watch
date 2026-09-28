@@ -3,9 +3,9 @@
 //  HebcalHDate Widgets
 //
 //  TimelineProvider that produces sparse entries pegged to the
-//  moments when the rendered text might change (mainly 8pm local,
-//  when the Hebrew day rolls over). The entries themselves are built
-//  by HebcalWatchCore.
+//  moments when the rendered text might change (mainly when the Hebrew
+//  day rolls over: at sunset with a location, else 8pm local; and at
+//  candle times). The entries themselves are built by HebcalWatchCore.
 //
 
 import Foundation
@@ -31,9 +31,9 @@ struct HebcalProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<HebcalEntry>) -> Void) {
         let offset = DebugClock.offset()
         let now = Date().addingTimeInterval(offset)
-        let dates = HebcalEntry.timelineDates(from: now, calendar: HebcalProvider.calendar)
-        let entries = HebcalEntry.entries(at: dates, settings: HebcalProvider.currentSettings(),
-                                          clockOffset: offset)
+        let settings = HebcalProvider.currentSettings()
+        let dates = HebcalEntry.timelineDates(from: now, calendar: HebcalProvider.calendar, settings: settings)
+        let entries = HebcalEntry.entries(at: dates, settings: settings, clockOffset: offset)
         completion(Timeline(entries: entries, policy: .atEnd))
     }
 

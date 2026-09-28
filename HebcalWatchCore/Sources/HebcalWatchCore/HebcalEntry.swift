@@ -55,6 +55,10 @@ public struct HebcalEntry {
     public let richHeaderShort: String     // "26 Tishrei" (no year)
     public let richHeaderAbbrev: String    // "26 Tishr" (Abbreviations.month)
     public let omerToday: String?
+    // The next candle-lighting / Havdalah / Chanukah time of the current
+    // Hebrew day (with a location only), for the rectangular widget.
+    // Several when they coincide: Chanukah and Shabbat candles on Friday.
+    public let zmanim: [ZmanEvent]
 
     // Inline (one-line) form, replaces utilitarian-large. Tiers from
     // widest to narrowest; the view picks the first one that fits.
@@ -69,7 +73,7 @@ extension HebcalEntry {
 
     /// Computes every complication string for `date`.
     public init(date: Date, formatter: HebcalFormatter, calendar: Calendar = .current) {
-        let hdate = HebcalFormatter.hebrewDate(for: date, calendar: calendar)
+        let hdate = formatter.hebrewDate(for: date, calendar: calendar)
         let lang = formatter.lang
 
         let parts = formatter.dateParts(hdate, showYear: false)
@@ -143,9 +147,28 @@ extension HebcalEntry {
         self.richHeaderShort = hebDateShort + richHeaderSuffix
         self.richHeaderAbbrev = hebDateAbbrev + richHeaderSuffix
         self.omerToday = formatter.omer(on: hdate)
+        self.zmanim = Self.upcomingZmanim(at: date, hdate: hdate, formatter: formatter, calendar: calendar)
         self.inlineText = inline(hebDateShort)
         self.inlineAbbrevText = inline(hebDateAbbrev)
         self.inlineTinyText = inline("\(dayNum) \(Abbreviations.monthTiny[monthKey] ?? monthShort)")
+    }
+
+    /// The candle times to show at `date`, when the Hebrew date is `hdate`:
+    /// today's until they pass, except that candle lighting stays up until
+    /// sunset; after sunset, tomorrow's (so Friday night shows Havdalah).
+    static func upcomingZmanim(at date: Date, hdate: HDate, formatter: HebcalFormatter,
+                               calendar: Calendar) -> [ZmanEvent] {
+        let today = HDate(date: date, calendar: calendar)
+        let afterSunset = hdate.abs() != today.abs()
+        var candidates = formatter.candleTimes(on: today, calendar: calendar)
+            .filter { $0.time > date || !afterSunset }
+        if afterSunset {
+            candidates += formatter.candleTimes(on: today.next(), calendar: calendar)
+        }
+        guard let first = candidates.first else {
+            return []
+        }
+        return candidates.filter { $0.time == first.time }
     }
 
     /// Entries for `dates`; safe to call from several threads at once.
@@ -161,6 +184,31 @@ extension HebcalEntry {
             entry.date = $0.addingTimeInterval(-clockOffset)
             return entry
         }
+    }
+
+    /// Sparse timeline pivots starting at `date`. Without a location, see
+    /// `timelineDates(from:calendar:)`. With one: sunset (when the Hebrew
+    /// date advances), each candle time (when it's replaced by the next),
+    /// and midnight, through the end of tomorrow.
+    public static func timelineDates(from date: Date, calendar: Calendar,
+                                     settings: HebcalSettings) -> [Date] {
+        let formatter = HebcalFormatter(settings: settings)
+        guard formatter.zmanimLocation(calendar: calendar) != nil else {
+            return timelineDates(from: date, calendar: calendar)
+        }
+        let today = calendar.startOfDay(for: date)
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
+        let end = calendar.date(byAdding: .day, value: 2, to: today)!
+        var pivots: Set<Date> = [tomorrow, end]
+        for day in [today, tomorrow] {
+            let noon = day.addingTimeInterval(12 * 60 * 60)
+            if let sunset = formatter.sunset(on: noon, calendar: calendar) {
+                pivots.insert(sunset)
+            }
+            let hdate = HDate(date: noon, calendar: calendar)
+            pivots.formUnion(formatter.candleTimes(on: hdate, calendar: calendar).map(\.time))
+        }
+        return [date] + pivots.filter { $0 > date && $0 <= end }.sorted()
     }
 
     /// Sparse timeline pivots starting at `date`: only the moments when the

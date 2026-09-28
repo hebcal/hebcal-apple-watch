@@ -28,8 +28,18 @@ final class ModelData: ObservableObject {
             listDay = nil
             updateDateItems()
             reloadComplications()
+            if settings.useLocation && !oldValue.useLocation {
+                awaitingFirstLocation = true
+                locationManager.requestLocation()
+            }
         }
     }
+
+    /// Gets fixes for sunset and candle times while `settings.useLocation`.
+    let locationManager = LocationManager()
+    /// Set when the user turns on location: the first fix may also switch
+    /// on the Israel schedule.
+    private var awaitingFirstLocation = false
 
     @Published private(set) var todayDateItem: DateItem
     @Published private(set) var dateItems: [DateItem] = []
@@ -41,13 +51,27 @@ final class ModelData: ObservableObject {
 
     private init() {
         let fakeDateChanged = DebugClock.setFakeDate(UserDefaults.standard.string(forKey: "FakeDate"))
-        let settings = HebcalSettings(defaults: HebcalSettings.appGroupDefaults)
+        let settings = HebcalSettings.launchSettings(defaults: HebcalSettings.appGroupDefaults,
+                                                     timeZone: .current)
         self.settings = settings
         formatter = HebcalFormatter(settings: settings)
         let now = Self.now
         todayDateItem = formatter.dateItem(for: now, calendar: .current, now: now,
                                            showYear: true, forceParsha: true)
         updateDateItems()
+        locationManager.onLocation = { [weak self] point in
+            guard let self else { return }
+            if self.awaitingFirstLocation {
+                self.awaitingFirstLocation = false
+                let chosen = HebcalSettings.israelChosen(defaults: HebcalSettings.appGroupDefaults)
+                self.settings = self.settings.applyingFirstLocation(point, israelChosen: chosen)
+            } else {
+                self.settings.location = point
+            }
+        }
+        locationManager.onDenied = { [weak self] in
+            self?.settings.useLocation = false
+        }
         if fakeDateChanged {
             Logger.model.debug("clock offset is now \(DebugClock.offset())s; reloading complications")
             reloadComplications()
@@ -69,6 +93,22 @@ final class ModelData: ObservableObject {
                                            showYear: true, forceParsha: true)
         dateItems = formatter.dateItems(from: now, calendar: calendar)
         Logger.model.debug("Made \(self.dateItems.count) dateItems")
+    }
+
+    /// The Israel toggle, as set by the user (after which the app no longer
+    /// sets it for them).
+    func setIsrael(_ il: Bool) {
+        HebcalSettings.markIsraelChosen(defaults: HebcalSettings.appGroupDefaults)
+        settings.il = il
+    }
+
+    /// Gets a new fix if location is on, in case the watch has moved. The
+    /// settings (and so the complications) only change if it has moved
+    /// more than about a kilometer or into another time zone.
+    func refreshLocation() {
+        if settings.useLocation {
+            locationManager.requestLocation()
+        }
     }
 
     /// The current time: the real time, or in Debug builds the fake clock

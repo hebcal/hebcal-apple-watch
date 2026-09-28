@@ -29,6 +29,8 @@
 		D00000000000000000000103 /* HebcalWatchCore in Frameworks */ = {isa = PBXBuildFile; productRef = D00000000000000000000101 /* HebcalWatchCore */; };
 		D00000000000000000000104 /* HebcalWatchCore in Frameworks */ = {isa = PBXBuildFile; productRef = D00000000000000000000102 /* HebcalWatchCore */; };
 		D00000000000000000000201 /* DateItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000200 /* DateItemDetailView.swift */; };
+		D00000000000000000000211 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000210 /* LocationManager.swift */; };
+		D00000000000000000000221 /* ZmanimSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000220 /* ZmanimSettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +103,8 @@
 		D000000000000000000000A9 /* HebcalHDate_WatchKit_App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HebcalHDate_WatchKit_App.entitlements; sourceTree = "<group>"; };
 		D00000000000000000000100 /* HebcalWatchCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HebcalWatchCore; sourceTree = "<group>"; };
 		D00000000000000000000200 /* DateItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateItemDetailView.swift; sourceTree = "<group>"; };
+		D00000000000000000000210 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		D00000000000000000000220 /* ZmanimSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZmanimSettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,11 +156,13 @@
 				9D9A028426CC6A460055160C /* HebcalHDateApp.swift */,
 				9DA5666526EEBFF10074F100 /* ExtensionDelegate.swift */,
 				9DC2BBE326D421A300A248EB /* ModelData.swift */,
+				D00000000000000000000210 /* LocationManager.swift */,
 				9D9A028226CC6A460055160C /* ContentView.swift */,
 				9DE0D4BB2703936B00486082 /* TodayView.swift */,
 				9D35F48026E5809100EC5AAD /* HDateList.swift */,
 				D00000000000000000000200 /* DateItemDetailView.swift */,
 				9D35F48226E6698400EC5AAD /* SettingsView.swift */,
+				D00000000000000000000220 /* ZmanimSettingsView.swift */,
 				9D9A027626CC6A460055160C /* Assets.xcassets */,
 				9D2E6CFB2705F8CC002EC757 /* Localizable.strings */,
 				9D9A027826CC6A460055160C /* Info.plist */,
@@ -343,6 +349,8 @@
 				9DC2BBE426D421A300A248EB /* ModelData.swift in Sources */,
 				9D35F48126E5809100EC5AAD /* HDateList.swift in Sources */,
 				D00000000000000000000201 /* DateItemDetailView.swift in Sources */,
+				D00000000000000000000211 /* LocationManager.swift in Sources */,
+				D00000000000000000000221 /* ZmanimSettingsView.swift in Sources */,
 				9D9A028526CC6A460055160C /* HebcalHDateApp.swift in Sources */,
 				9DE0D4BC2703936B00486082 /* TodayView.swift in Sources */,
 			);

@@ -24,6 +24,15 @@ struct SettingsView: View {
         modelData.settings.il ? "Israel schedule" : "Diaspora schedule"
     }
 
+    var locationFooter: LocalizedStringKey {
+        if modelData.locationManager.isDenied {
+            return "Location access is off for Hebcal. Turn it on in the Settings app under Privacy & Security › Location Services."
+        }
+        return modelData.settings.useLocation
+            ? "Hebrew date changes at sunset; candle-lighting and Havdalah times are shown."
+            : "For sunset, candle-lighting and Havdalah times. Otherwise the Hebrew date changes at 8 PM."
+    }
+
     var body: some View {
         Form {
             Section {
@@ -36,9 +45,20 @@ struct SettingsView: View {
                 Text(langDescription).textCase(.none)
             }
             Section {
-                Toggle("Israel", isOn: $modelData.settings.il)
+                Toggle("Israel", isOn: Binding(get: { modelData.settings.il },
+                                               set: { modelData.setIsrael($0) }))
             } header: {
                 Text(ilDescription).textCase(.none)
+            }
+            Section {
+                Toggle("Use Location", isOn: $modelData.settings.useLocation)
+                if modelData.settings.useLocation {
+                    NavigationLink(value: Screen.zmanim) {
+                        Label("Zmanim", systemImage: "sunset")
+                    }
+                }
+            } footer: {
+                Text(locationFooter)
             }
             Section {
                 Toggle("Daf Yomi", isOn: $modelData.settings.dafyomi)

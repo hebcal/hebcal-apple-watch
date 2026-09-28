@@ -3,7 +3,7 @@
 //  HebcalWatchCore
 //
 //  One row of the watch app's calendar: a Gregorian day with its Hebrew
-//  date, holidays, parsha, Omer and Daf Yomi, as display strings.
+//  date, holidays, parsha, Omer, Daf Yomi and candle times.
 //
 
 import Foundation
@@ -13,6 +13,16 @@ import Hebcal
 /// the row is tapped. Rows without one aren't tappable.
 public enum DateItemDetail: Hashable, Codable, Sendable {
     case omer(OmerDetail)
+    /// Candle times; links on to the Omer card on a day of the Omer.
+    case zmanim(ZmanimDetail)
+
+    /// The Omer card, directly or linked from the day's candle times.
+    public var omer: OmerDetail? {
+        switch self {
+        case .omer(let omer): return omer
+        case .zmanim(let zmanim): return zmanim.omer
+        }
+    }
 }
 
 public struct DateItem: Hashable, Codable, Identifiable {
@@ -29,12 +39,14 @@ public struct DateItem: Hashable, Codable, Identifiable {
     public var emoji: String?
     public var omer: String?
     public var dafyomi: String?
+    /// Candle lighting, Havdalah, Chanukah candles; empty without a location.
+    public var zmanim: [ZmanEvent]
     public var detail: DateItemDetail?
 
     public init(id: Int, lang: TranslationLang, dow: String, gregDay: Int, gregMonth: String,
                 gregYear: Int, hdate: String, parsha: String?, holidays: [String],
                 emoji: String?, omer: String?, dafyomi: String?,
-                detail: DateItemDetail? = nil) {
+                zmanim: [ZmanEvent] = [], detail: DateItemDetail? = nil) {
         self.id = id
         self.lang = lang
         self.dow = dow
@@ -47,6 +59,7 @@ public struct DateItem: Hashable, Codable, Identifiable {
         self.emoji = emoji
         self.omer = omer
         self.dafyomi = dafyomi
+        self.zmanim = zmanim
         self.detail = detail
     }
 }
@@ -75,6 +88,7 @@ extension HebcalFormatter {
         let isRoshHashana = hdate.mm == .TISHREI && hdate.dd == 1
         let events = holidays(on: hdate)
         let currentYear = calendar.component(.year, from: now)
+        let zmanimDetail = zmanimDetail(on: hdate, calendar: calendar)
         return DateItem(
             id: (hdate.yy * 10000) + (hdate.mm.rawValue * 100) + hdate.dd,
             lang: lang,
@@ -88,13 +102,14 @@ extension HebcalFormatter {
             emoji: Self.emoji(for: events),
             omer: omer(on: hdate),
             dafyomi: settings.dafyomi ? dafYomi(on: date) : nil,
-            detail: omerDetail(on: hdate).map(DateItemDetail.omer)
+            zmanim: zmanimDetail?.events ?? [],
+            detail: zmanimDetail.map(DateItemDetail.zmanim) ?? omerDetail(on: hdate).map(DateItemDetail.omer)
         )
     }
 
     /// The app's scrolling calendar starting at `date`: every day for two
-    /// weeks, then only Shabbatot and holidays through one Hebrew year from
-    /// today.
+    /// weeks, then only Shabbatot, holidays and (with a location) other days
+    /// with candle times, i.e. Fridays, through one Hebrew year from today.
     public func dateItems(from date: Date, calendar: Calendar) -> [DateItem] {
         let oneDay = 24.0 * 60.0 * 60.0
         var items = [dateItem(for: date, calendar: calendar, now: date,
@@ -111,7 +126,8 @@ extension HebcalFormatter {
         for abs in greg2abs(date: current)...endAbs {
             let hdate = HDate(absdate: abs)
             let isShabbat = hdate.dow() == .SAT
-            if isShabbat || !holidays(on: hdate).isEmpty {
+            if isShabbat || !holidays(on: hdate).isEmpty
+                || (hdate.dow() == .FRI && zmanimLocation(calendar: calendar) != nil) {
                 items.append(dateItem(for: hdate.greg(), calendar: calendar, now: date,
                                       showYear: false, forceParsha: isShabbat))
             }

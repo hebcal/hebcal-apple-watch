@@ -273,7 +273,18 @@ extension HebcalWatchCoreTests {
 extension HebcalWatchCoreTests {
     @Suite struct SettingsTests {
         @Test func unsetDefaultsGiveDiasporaSephardic() {
-            #expect(HebcalSettings(defaults: scratchDefaults()) == HebcalSettings(il: false, lang: .en, dafyomi: false))
+            #expect(HebcalSettings(defaults: scratchDefaults(), timeZone: TimeZone(identifier: "America/New_York")!)
+                    == HebcalSettings(il: false, lang: .en, dafyomi: false))
+        }
+
+        @Test func unsetIsraelDefaultsToOnInIsrael() {
+            let jerusalem = TimeZone(identifier: "Asia/Jerusalem")!
+            // What the widget reads before the app has ever launched.
+            #expect(HebcalSettings(defaults: scratchDefaults(), timeZone: jerusalem).il)
+            // A saved choice wins.
+            let defaults = scratchDefaults()
+            HebcalSettings(il: false).save(to: defaults)
+            #expect(!HebcalSettings(defaults: defaults, timeZone: jerusalem).il)
         }
 
         @Test func roundTrip() {
@@ -281,6 +292,60 @@ extension HebcalWatchCoreTests {
             let settings = HebcalSettings(il: true, lang: .he, dafyomi: true)
             settings.save(to: defaults)
             #expect(HebcalSettings(defaults: defaults) == settings)
+        }
+
+        @Test func newInstallInIsraelDefaultsToIsraelSchedule() {
+            let defaults = scratchDefaults()
+            let settings = HebcalSettings.launchSettings(defaults: defaults,
+                                                         timeZone: TimeZone(identifier: "Asia/Jerusalem")!)
+            #expect(settings.il)
+            #expect(HebcalSettings(defaults: defaults).il)      // saved
+            #expect(!HebcalSettings.israelChosen(defaults: defaults))
+        }
+
+        @Test func newInstallElsewhereSavesNothing() {
+            let defaults = scratchDefaults()
+            let settings = HebcalSettings.launchSettings(defaults: defaults,
+                                                         timeZone: TimeZone(identifier: "America/New_York")!)
+            #expect(!settings.il)
+            #expect(defaults.object(forKey: "lang") == nil)
+        }
+
+        @Test func existingInstallInIsraelIsLeftAlone() {
+            let defaults = scratchDefaults()
+            HebcalSettings(il: false, lang: .he).save(to: defaults)
+            let settings = HebcalSettings.launchSettings(defaults: defaults,
+                                                         timeZone: TimeZone(identifier: "Asia/Jerusalem")!)
+            #expect(!settings.il)
+            // An Israel setting saved before this version counts as chosen.
+            #expect(HebcalSettings.israelChosen(defaults: defaults))
+        }
+
+        @Test func firstLocationInIsraelTurnsOnIsraelUnlessChosen() {
+            let tlv = GeoPoint(latitude: 32.08, longitude: 34.78, timeZoneIdentifier: "Asia/Jerusalem")
+            let nyc = GeoPoint(latitude: 40.71, longitude: -74.01, timeZoneIdentifier: "America/New_York")
+            let diaspora = HebcalSettings(il: false, useLocation: true)
+            #expect(diaspora.applyingFirstLocation(tlv, israelChosen: false).il)
+            #expect(diaspora.applyingFirstLocation(tlv, israelChosen: false).location == tlv)
+            #expect(!diaspora.applyingFirstLocation(tlv, israelChosen: true).il)
+            #expect(!diaspora.applyingFirstLocation(nyc, israelChosen: false).il)
+            // Never switches Israel off.
+            #expect(HebcalSettings(il: true).applyingFirstLocation(nyc, israelChosen: false).il)
+        }
+
+        @Test func zmanimRoundTrip() {
+            let defaults = scratchDefaults()
+            let point = GeoPoint(latitude: 31.7683, longitude: 35.2137, timeZoneIdentifier: "Asia/Jerusalem")
+            #expect(point.latitude == 31.77)            // rounded to ~1 km
+            for havdalah in [HavdalahSetting.minutes(72), .degrees(7.083), .default] {
+                let settings = HebcalSettings(useLocation: true, location: point,
+                                              candleLightingMinutes: 30, havdalah: havdalah)
+                settings.save(to: defaults)
+                #expect(HebcalSettings(defaults: defaults) == settings)
+            }
+            // Back to automatic, and forgetting the location.
+            HebcalSettings().save(to: defaults)
+            #expect(HebcalSettings(defaults: defaults) == HebcalSettings())
         }
 
         @Test func legacyMigrationCopiesOnlyOnce() {
@@ -294,6 +359,176 @@ extension HebcalWatchCoreTests {
             HebcalSettings(lang: .he).save(to: shared)
             HebcalSettings.migrateLegacySettings(from: standard, to: shared)
             #expect(HebcalSettings(defaults: shared).lang == .he)
+        }
+    }
+}
+
+// MARK: - Candle times
+
+private let newYork = GeoPoint(latitude: 40.7128, longitude: -74.0060, timeZoneIdentifier: "America/New_York")
+
+private func zmanimFormatter(_ lang: TranslationLang = .en, havdalah: HavdalahSetting = .default,
+                             candleLightingMinutes: Int? = nil) -> HebcalFormatter {
+    HebcalFormatter(settings: HebcalSettings(lang: lang, useLocation: true, location: newYork,
+                                             candleLightingMinutes: candleLightingMinutes, havdalah: havdalah))
+}
+
+/// "kind HH:mm" in UTC, to compare with @hebcal/core output.
+private func describe(_ events: [ZmanEvent]) -> [String] {
+    let utc = ISO8601DateFormatter()
+    return events.map { "\($0.kind.rawValue) \(utc.string(from: $0.time))" }
+}
+
+private func candleTimes(_ f: HebcalFormatter, _ y: Int, _ m: Int, _ d: Int) -> [String] {
+    describe(f.candleTimes(on: HDate(date: date(y, m, d), calendar: calendar), calendar: calendar))
+}
+
+extension HebcalWatchCoreTests {
+    /// Expected times from @hebcal/core's HebrewCalendar.calendar() with
+    /// candlelighting, havdalahDeg 8.5 (or havdalahMins 42), for New York.
+    @Suite struct CandleTimeTests {
+        @Test(arguments: [
+            // Erev Rosh Hashana on Friday: Shabbat candles before sunset.
+            (2026, 9, 11, ["candleLighting 2026-09-11T22:53:00Z"]),
+            // RH I on Shabbat: candles for RH II at nightfall, no Havdalah.
+            (2026, 9, 12, ["candleLighting 2026-09-12T23:51:00Z"]),
+            (2026, 9, 13, ["havdalah 2026-09-13T23:49:00Z"]),
+            (2026, 9, 14, []),                                  // Tzom Gedaliah: no fast times here
+            (2026, 9, 20, ["candleLighting 2026-09-20T22:38:00Z"]),   // Erev Yom Kippur
+            (2026, 9, 21, ["havdalah 2026-09-21T23:35:00Z"]),         // Yom Kippur ends
+            (2026, 9, 26, ["candleLighting 2026-09-26T23:27:00Z"]),   // Sukkot I → II
+            (2026, 9, 27, ["havdalah 2026-09-27T23:25:00Z"]),
+            (2026, 10, 3, ["candleLighting 2026-10-03T23:15:00Z"]),   // Shabbat → Shmini Atzeret
+            // Chanukah on Friday: with Shabbat candles; Saturday: after Havdalah;
+            // weekdays: bein hashmashot.
+            (2026, 12, 4, ["chanukah 2026-12-04T21:10:00Z", "candleLighting 2026-12-04T21:10:00Z"]),
+            (2026, 12, 5, ["chanukah 2026-12-05T22:14:00Z", "havdalah 2026-12-05T22:14:00Z"]),
+            (2026, 12, 7, ["chanukah 2026-12-07T21:52:00Z"]),
+            (2026, 12, 12, ["havdalah 2026-12-12T22:14:00Z"]),
+            (2026, 12, 13, []),
+        ])
+        func matchesHebcalCore(y: Int, m: Int, d: Int, expected: [String]) {
+            #expect(candleTimes(zmanimFormatter(), y, m, d) == expected)
+        }
+
+        @Test func havdalahMinutes() {
+            let f = zmanimFormatter(havdalah: .minutes(42))
+            #expect(candleTimes(f, 2026, 9, 12) == ["candleLighting 2026-09-12T23:52:00Z"])
+            #expect(candleTimes(f, 2026, 9, 13) == ["havdalah 2026-09-13T23:50:00Z"])
+        }
+
+        @Test func candleLightingMinutesOverride() {
+            // 18 → 40 minutes before sunset is 22 minutes earlier.
+            #expect(candleTimes(zmanimFormatter(candleLightingMinutes: 40), 2026, 9, 11)
+                    == ["candleLighting 2026-09-11T22:31:00Z"])
+        }
+
+        @Test func titles() throws {
+            let friday = HDate(date: date(2026, 12, 4), calendar: calendar)
+            #expect(zmanimFormatter().candleTimes(on: friday, calendar: calendar).map(\.title)
+                    == ["Chanukah: 1 Candle", "Candle lighting"])
+            #expect(zmanimFormatter(.he).candleTimes(on: friday.next(), calendar: calendar).last?.title == "הבדלה")
+        }
+
+        @Test func nothingWithoutLocation() {
+            #expect(candleTimes(formatter(), 2026, 9, 11) == [])
+            // Location off, even with a fix saved.
+            let off = HebcalFormatter(settings: HebcalSettings(useLocation: false, location: newYork))
+            #expect(candleTimes(off, 2026, 9, 11) == [])
+        }
+
+        @Test func nothingInAnotherTimeZone() {
+            let la = GeoPoint(latitude: 34.05, longitude: -118.24, timeZoneIdentifier: "America/Los_Angeles")
+            let f = HebcalFormatter(settings: HebcalSettings(useLocation: true, location: la))
+            #expect(f.zmanimLocation(calendar: calendar) == nil)
+            #expect(candleTimes(f, 2026, 9, 11) == [])
+        }
+
+        @Test(arguments: [
+            (31.7683, 35.2137, "Asia/Jerusalem", 40),      // Jerusalem
+            (31.80, 35.10, "Asia/Jerusalem", 40),          // Jerusalem outskirts
+            (32.8191, 34.9983, "Asia/Jerusalem", 30),      // Haifa
+            (32.5706, 34.9544, "Asia/Jerusalem", 30),      // Zikhron Ya'akov
+            (32.0853, 34.7818, "Asia/Jerusalem", 20),      // Tel Aviv
+            (40.7128, -74.0060, "America/New_York", 18),   // New York
+        ])
+        func defaultCandleLightingMinutes(lat: Double, lon: Double, tzid: String, expected: Int) {
+            let point = GeoPoint(latitude: lat, longitude: lon, timeZoneIdentifier: tzid)
+            #expect(point.defaultCandleLightingMinutes == expected)
+        }
+
+        @Test func automaticCandleLightingIgnoresSchedule() {
+            let tlv = GeoPoint(latitude: 32.08, longitude: 34.78, timeZoneIdentifier: "Asia/Jerusalem")
+            let visitor = HebcalFormatter(settings: HebcalSettings(il: false, useLocation: true, location: tlv))
+            #expect(visitor.candleLightingMinutes(at: tlv) == 20)
+            let israeliAbroad = HebcalFormatter(settings: HebcalSettings(il: true, useLocation: true, location: newYork))
+            #expect(israeliAbroad.candleLightingMinutes(at: newYork) == 18)
+        }
+
+        @Test func hebrewDateRollsOverAtSunset() {
+            // Sunset in New York on Oct 7, 2026 is 6:28:09 PM.
+            let f = zmanimFormatter()
+            #expect(f.hebrewDate(for: date(2026, 10, 7, hour: 18, minute: 25), calendar: calendar).dd == 26)
+            #expect(f.hebrewDate(for: date(2026, 10, 7, hour: 18, minute: 35), calendar: calendar).dd == 27)
+            // Without a location, still 8 PM.
+            #expect(formatter().hebrewDate(for: date(2026, 10, 7, hour: 18, minute: 35), calendar: calendar).dd == 26)
+        }
+
+        @Test func dateItemsIncludeFridaysAndDetail() throws {
+            let f = zmanimFormatter()
+            let items = f.dateItems(from: date(2026, 10, 7), calendar: calendar)
+            // Fridays beyond the first two weeks, e.g. Nov 6, 2026.
+            let nov6 = try #require(items.first { $0.gregMonth == "Nov" && $0.gregDay == 6 })
+            #expect(nov6.zmanim.map(\.kind) == [.candleLighting])
+            guard case .zmanim(let detail) = nov6.detail else {
+                Issue.record("expected a zmanim detail")
+                return
+            }
+            #expect(detail.sunset != nil)
+            #expect(detail.omer == nil)
+            // Without a location, no Fridays that aren't holidays.
+            #expect(!formatter().dateItems(from: date(2026, 10, 7), calendar: calendar)
+                .contains { $0.gregMonth == "Nov" && $0.gregDay == 6 })
+        }
+
+        @Test func omerFridayLinksToOmer() throws {
+            let item = zmanimFormatter().dateItem(for: date(2027, 4, 23), calendar: calendar,
+                                                  now: date(2027, 4, 23), showYear: false, forceParsha: false)
+            #expect(item.zmanim.map(\.kind) == [.candleLighting])
+            #expect(item.detail?.omer != nil)
+        }
+
+        @Test func entryShowsCandlesUntilSunsetThenHavdalah() {
+            let f = zmanimFormatter()
+            func kinds(_ d: Int, _ h: Int, _ min: Int = 0) -> [ZmanEvent.Kind] {
+                HebcalEntry(date: date(2026, 11, d, hour: h, minute: min), formatter: f, calendar: calendar)
+                    .zmanim.map(\.kind)
+            }
+            // Fri Nov 6: candles 4:28 PM, sunset 4:46 PM; Sat Nov 7: sunset 4:45 PM, Havdalah 5:28 PM.
+            #expect(kinds(5, 12) == [])                      // Thursday
+            #expect(kinds(6, 9) == [.candleLighting])
+            #expect(kinds(6, 16, 40) == [.candleLighting])   // lit, not yet sunset
+            #expect(kinds(6, 17, 0) == [.havdalah])          // Shabbat has begun
+            #expect(kinds(7, 17, 0) == [.havdalah])          // after sunset, before Havdalah
+            #expect(kinds(7, 18, 0) == [])
+        }
+
+        @Test func timelinePivotsAtSunsetAndCandleTimes() {
+            let settings = HebcalSettings(useLocation: true, location: newYork)
+            let start = date(2026, 11, 6, hour: 9)
+            let dates = HebcalEntry.timelineDates(from: start, calendar: calendar, settings: settings)
+            let hm = dates.map { calendar.dateComponents([.day, .hour, .minute], from: $0) }
+                .map { "\($0.day!) \($0.hour!):\($0.minute!)" }
+            #expect(hm.first == "6 9:0")
+            #expect(hm.contains("6 16:28"))     // candle lighting
+            #expect(hm.contains("6 16:46"))     // sunset
+            #expect(hm.contains("7 17:28"))     // Havdalah
+            #expect(hm.contains("7 0:0"))       // midnight
+            #expect(hm.last == "8 0:0")
+            #expect(dates == dates.sorted())
+            // Without a location, the 8 PM pivots.
+            #expect(HebcalEntry.timelineDates(from: start, calendar: calendar, settings: HebcalSettings())
+                    == HebcalEntry.timelineDates(from: start, calendar: calendar))
         }
     }
 }

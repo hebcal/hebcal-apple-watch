@@ -81,6 +81,15 @@ struct TodayView: View {
                         .font(.system(size: smallFontSize, weight: .regular, design: .default))
                         .lineLimit(1)
                 }
+                // Last, since they're in the evening (Havdalah comes after
+                // Shabbat morning's reading). Compact: the holiday is
+                // already named above, and the detail card has the titles.
+                ForEach(item.zmanim, id: \.self) { zman in
+                    Text("\(zman.emoji) \(zman.time, format: .dateTime.hour().minute())")
+                        .foregroundColor(.orange)
+                        .font(.system(size: largeFontSize, weight: .regular, design: .default))
+                        .lineLimit(1)
+                }
             }
             .minimumScaleFactor(0.6)
             .multilineTextAlignment(isHebrew ? .trailing : .leading)
@@ -105,6 +114,15 @@ struct TodayView: View {
         omer: "Omer: 31st day",
         dafyomi: "Pesachim 108"
     ))
+}
+
+#Preview("Candle lighting row", traits: .fixedLayout(width: 300, height: 150)) {
+    let date = Calendar.current.date(from: DateComponents(year: 2026, month: 12, day: 4, hour: 12))!
+    let settings = HebcalSettings(useLocation: true, location: GeoPoint(
+        latitude: 40.71, longitude: -74.01, timeZoneIdentifier: TimeZone.current.identifier))
+    TodayView(item: HebcalFormatter(settings: settings)
+        .dateItem(for: date, calendar: .current, now: date, showYear: false, forceParsha: false),
+              showsChevron: true)
 }
 
 #Preview("Omer row", traits: .fixedLayout(width: 300, height: 150)) {
