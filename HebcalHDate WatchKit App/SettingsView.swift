@@ -11,7 +11,7 @@ import Hebcal
 struct SettingsView: View {
     @EnvironmentObject var modelData: ModelData
 
-    var langDescription: String {
+    var langFooter: String {
         switch modelData.settings.lang {
         case .en: return "e.g. “Sukkot”"
         case .ashkenazi: return "e.g. “Sukkos”"
@@ -20,8 +20,10 @@ struct SettingsView: View {
         }
     }
 
-    var ilDescription: LocalizedStringKey {
-        modelData.settings.il ? "Israel schedule" : "Diaspora schedule"
+    var ilFooter: LocalizedStringKey {
+        modelData.settings.il
+            ? "Holidays and Torah readings follow the Israel schedule."
+            : "Holidays and Torah readings follow the Diaspora schedule."
     }
 
     var locationFooter: LocalizedStringKey {
@@ -41,14 +43,8 @@ struct SettingsView: View {
                     Text("Ashkenazi").tag(TranslationLang.ashkenazi)
                     Text("Hebrew").tag(TranslationLang.he)
                 }
-            } header: {
-                Text(langDescription).textCase(.none)
-            }
-            Section {
-                Toggle("Israel", isOn: Binding(get: { modelData.settings.il },
-                                               set: { modelData.setIsrael($0) }))
-            } header: {
-                Text(ilDescription).textCase(.none)
+            } footer: {
+                Text(langFooter)
             }
             Section {
                 Toggle("Use Location", isOn: $modelData.settings.useLocation)
@@ -59,6 +55,12 @@ struct SettingsView: View {
                 }
             } footer: {
                 Text(locationFooter)
+            }
+            Section {
+                Toggle("Israel", isOn: Binding(get: { modelData.settings.il },
+                                               set: { modelData.setIsrael($0) }))
+            } footer: {
+                Text(ilFooter)
             }
             Section {
                 Toggle("Daf Yomi", isOn: $modelData.settings.dafyomi)

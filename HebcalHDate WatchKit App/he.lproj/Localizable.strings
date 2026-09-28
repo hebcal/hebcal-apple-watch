@@ -11,8 +11,8 @@
 "Ashkenazi" = "אנגלית (אשכנזי)";
 "Sephardic" = "אנגלית (ספרדי)";
 "Israel" = "ישראל";
-"Israel schedule" = "תכנית ישראל";
-"Diaspora schedule" = "תכנית חוץ לארץ";
+"Holidays and Torah readings follow the Israel schedule." = "החגים וקריאות התורה לפי לוח ארץ ישראל.";
+"Holidays and Torah readings follow the Diaspora schedule." = "החגים וקריאות התורה לפי לוח חוץ לארץ.";
 "Calendar" = "לוח שנה";
 "Daf Yomi" = "דף יומי";
 "Omer" = "עומר";
