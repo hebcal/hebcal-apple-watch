@@ -20,16 +20,20 @@ struct HebcalProvider: TimelineProvider {
     typealias Entry = HebcalEntry
 
     func placeholder(in context: Context) -> HebcalEntry {
-        return HebcalProvider.entry(for: Date())
+        return HebcalProvider.entry(for: DebugClock.now())
     }
 
     func getSnapshot(in context: Context, completion: @escaping (HebcalEntry) -> Void) {
-        completion(HebcalProvider.entry(for: Date()))
+        completion(HebcalProvider.entry(for: DebugClock.now()))
     }
 
+    /// Uses the app's fake clock in Debug builds (see `DebugClock`).
     func getTimeline(in context: Context, completion: @escaping (Timeline<HebcalEntry>) -> Void) {
-        let dates = HebcalEntry.timelineDates(from: Date(), calendar: HebcalProvider.calendar)
-        let entries = HebcalEntry.entries(at: dates, settings: HebcalProvider.currentSettings())
+        let offset = DebugClock.offset()
+        let now = Date().addingTimeInterval(offset)
+        let dates = HebcalEntry.timelineDates(from: now, calendar: HebcalProvider.calendar)
+        let entries = HebcalEntry.entries(at: dates, settings: HebcalProvider.currentSettings(),
+                                          clockOffset: offset)
         completion(Timeline(entries: entries, policy: .atEnd))
     }
 

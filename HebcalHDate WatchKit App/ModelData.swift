@@ -40,17 +40,23 @@ final class ModelData: ObservableObject {
     private var currentTimeZone = TimeZone.current
 
     private init() {
+        let fakeDateChanged = DebugClock.setFakeDate(UserDefaults.standard.string(forKey: "FakeDate"))
         let settings = HebcalSettings(defaults: HebcalSettings.appGroupDefaults)
         self.settings = settings
         formatter = HebcalFormatter(settings: settings)
-        todayDateItem = formatter.dateItem(for: Date(), calendar: .current, now: Date(),
+        let now = Self.now
+        todayDateItem = formatter.dateItem(for: now, calendar: .current, now: now,
                                            showYear: true, forceParsha: true)
         updateDateItems()
+        if fakeDateChanged {
+            Logger.model.debug("clock offset is now \(DebugClock.offset())s; reloading complications")
+            reloadComplications()
+        }
     }
 
     /// Rebuilds the list if the day has changed since it was last built.
     func updateDateItems() {
-        let now = Date()
+        let now = Self.now
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: now)
         guard today != listDay else {
@@ -63,6 +69,12 @@ final class ModelData: ObservableObject {
                                            showYear: true, forceParsha: true)
         dateItems = formatter.dateItems(from: now, calendar: calendar)
         Logger.model.debug("Made \(self.dateItems.count) dateItems")
+    }
+
+    /// The current time: the real time, or in Debug builds the fake clock
+    /// set by the `-FakeDate` launch argument (see `DebugClock`).
+    private static var now: Date {
+        DebugClock.now()
     }
 
     /// Reloads the complications if the watch has moved to another time

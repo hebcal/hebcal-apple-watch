@@ -9,6 +9,12 @@
 import Foundation
 import Hebcal
 
+/// More about a day than fits in its row, shown on a card of its own when
+/// the row is tapped. Rows without one aren't tappable.
+public enum DateItemDetail: Hashable, Codable, Sendable {
+    case omer(OmerDetail)
+}
+
 public struct DateItem: Hashable, Codable, Identifiable {
     public var id: Int
     public var lang: TranslationLang
@@ -23,10 +29,12 @@ public struct DateItem: Hashable, Codable, Identifiable {
     public var emoji: String?
     public var omer: String?
     public var dafyomi: String?
+    public var detail: DateItemDetail?
 
     public init(id: Int, lang: TranslationLang, dow: String, gregDay: Int, gregMonth: String,
                 gregYear: Int, hdate: String, parsha: String?, holidays: [String],
-                emoji: String?, omer: String?, dafyomi: String?) {
+                emoji: String?, omer: String?, dafyomi: String?,
+                detail: DateItemDetail? = nil) {
         self.id = id
         self.lang = lang
         self.dow = dow
@@ -39,6 +47,7 @@ public struct DateItem: Hashable, Codable, Identifiable {
         self.emoji = emoji
         self.omer = omer
         self.dafyomi = dafyomi
+        self.detail = detail
     }
 }
 
@@ -78,7 +87,8 @@ extension HebcalFormatter {
             holidays: events.map { holidayName($0, abbreviated: false) },
             emoji: Self.emoji(for: events),
             omer: omer(on: hdate),
-            dafyomi: settings.dafyomi ? dafYomi(on: date) : nil
+            dafyomi: settings.dafyomi ? dafYomi(on: date) : nil,
+            detail: omerDetail(on: hdate).map(DateItemDetail.omer)
         )
     }
 

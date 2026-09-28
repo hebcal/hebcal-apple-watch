@@ -25,6 +25,14 @@ private func entry(_ y: Int, _ m: Int, _ d: Int, _ lang: TranslationLang = .en, 
     HebcalEntry(date: date(y, m, d), formatter: formatter(lang, il: il), calendar: calendar)
 }
 
+/// An empty UserDefaults suite of its own.
+private func scratchDefaults() -> UserDefaults {
+    let name = "HebcalWatchCoreTests.\(UUID().uuidString)"
+    let defaults = UserDefaults(suiteName: name)!
+    defaults.removePersistentDomain(forName: name)
+    return defaults
+}
+
 @Suite struct HebcalWatchCoreTests {}
 
 // MARK: - Abbreviations
@@ -133,6 +141,45 @@ extension HebcalWatchCoreTests {
             #expect(formatter().omer(on: HDate(yy: 5787, mm: .SIVAN, dd: 6)) == nil)
         }
 
+        @Test func omerDetail() throws {
+            #expect(formatter().omerDetail(on: HDate(yy: 5787, mm: .NISAN, dd: 15)) == nil)
+            #expect(formatter().omerDetail(on: HDate(yy: 5787, mm: .SIVAN, dd: 6)) == nil)
+            let detail = try #require(formatter().omerDetail(on: HDate(yy: 5787, mm: .IYYAR, dd: 13)))
+            #expect(detail.day == 28)
+            #expect(detail.title == "28th day of the Omer")
+            #expect(!detail.isHebrew)
+            #expect(detail.sections.map(\.heading) ==
+                    ["Count", "Sefirah", "Psalm 67 word", "Psalm 67:5 letter", "Ana BeKoach"])
+            let count = detail.sections[0].lines
+            #expect(count.map(\.isHebrew) == [true, false])
+            #expect(count[1].text == "Today is 28 days, which are 4 weeks of the Omer")
+            let sefirah = detail.sections[1].lines.map(\.text)
+            #expect(sefirah[1] == "Malkhut sheb'Netzach")
+            #expect(sefirah[2] == "Majesty within Eternity")
+            #expect(detail.sections[1].lines.map(\.isTransliteration) == [false, true, false])
+        }
+
+        @Test func omerDetailInHebrew() throws {
+            let detail = try #require(formatter(.he).omerDetail(on: HDate(yy: 5787, mm: .NISAN, dd: 16)))
+            #expect(detail.title == "א׳ בעומר")
+            #expect(detail.isHebrew)
+            #expect(detail.sections.allSatisfy { $0.lines.allSatisfy(\.isHebrew) })
+        }
+
+        @Test func onlyOmerDaysHaveDetail() {
+            let f = formatter()
+            let omerDay = f.dateItem(for: date(2027, 4, 23), calendar: calendar, now: date(2027, 4, 23),
+                                     showYear: false, forceParsha: false)
+            let plainDay = f.dateItem(for: date(2026, 10, 7), calendar: calendar, now: date(2026, 10, 7),
+                                      showYear: false, forceParsha: false)
+            guard case .omer(let omer) = omerDay.detail else {
+                Issue.record("expected an Omer detail on \(omerDay.hdate)")
+                return
+            }
+            #expect(omerDay.omer == "Omer: \(omer.day)\(HebcalFormatter.ordinalSuffix(omer.day)) day")
+            #expect(plainDay.detail == nil)
+        }
+
         @Test func parshaReplacedByHoliday() {
             let beforeSukkot = HDate(yy: 5787, mm: .TISHREI, dd: 11)
             #expect(formatter().parsha(on: beforeSukkot) == nil)
@@ -209,6 +256,15 @@ extension HebcalWatchCoreTests {
             let hm = dates.map { calendar.dateComponents([.hour, .minute], from: $0) }.map { "\($0.hour!):\($0.minute!)" }
             #expect(hm == ["15:30", "19:59", "20:0", "23:59"])
         }
+
+        @Test func clockOffsetStampsEntriesOnTheRealClock() {
+            let fake = date(2027, 5, 10)
+            let offset = 180.0 * 24 * 60 * 60
+            let entry = HebcalEntry.entries(at: [fake], settings: HebcalSettings(), calendar: calendar,
+                                            clockOffset: offset)[0]
+            #expect(entry.date == fake.addingTimeInterval(-offset))
+            #expect(entry.omerToday == "Omer: 18th day")        // contents are for the fake date
+        }
     }
 }
 
@@ -216,13 +272,6 @@ extension HebcalWatchCoreTests {
 
 extension HebcalWatchCoreTests {
     @Suite struct SettingsTests {
-        private func scratchDefaults() -> UserDefaults {
-            let name = "HebcalWatchCoreTests.\(UUID().uuidString)"
-            let defaults = UserDefaults(suiteName: name)!
-            defaults.removePersistentDomain(forName: name)
-            return defaults
-        }
-
         @Test func unsetDefaultsGiveDiasporaSephardic() {
             #expect(HebcalSettings(defaults: scratchDefaults()) == HebcalSettings(il: false, lang: .en, dafyomi: false))
         }
@@ -245,6 +294,31 @@ extension HebcalWatchCoreTests {
             HebcalSettings(lang: .he).save(to: shared)
             HebcalSettings.migrateLegacySettings(from: standard, to: shared)
             #expect(HebcalSettings(defaults: shared).lang == .he)
+        }
+    }
+}
+
+// MARK: - DebugClock
+
+extension HebcalWatchCoreTests {
+    @Suite struct DebugClockTests {
+        @Test func parsesLocalTime() throws {
+            let parsed = try #require(DebugClock.parse("2027-05-10T20:15"))
+            let c = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: parsed)
+            #expect([c.year, c.month, c.day, c.hour, c.minute] == [2027, 5, 10, 20, 15])
+            #expect(DebugClock.parse("May 10") == nil)
+        }
+
+        @Test func fakeDateSetsAndClearsTheOffset() throws {
+            let defaults = scratchDefaults()
+            #expect(DebugClock.offset(defaults: defaults) == 0)
+            #expect(DebugClock.setFakeDate("2027-05-10T12:00", defaults: defaults))
+            let fake = try #require(DebugClock.parse("2027-05-10T12:00"))
+            #expect(abs(DebugClock.now(defaults: defaults).timeIntervalSince(fake)) < 5)
+            #expect(!DebugClock.setFakeDate("2027-05-10T12:00", defaults: defaults))  // relaunch
+            #expect(DebugClock.setFakeDate(nil, defaults: defaults))
+            #expect(DebugClock.offset(defaults: defaults) == 0)
+            #expect(!DebugClock.setFakeDate("garbage", defaults: defaults))
         }
     }
 }

@@ -11,7 +11,9 @@ import Foundation
 import Hebcal
 
 public struct HebcalEntry {
-    public let date: Date
+    /// When WidgetKit shows the entry, on the real clock. Normally also the
+    /// moment the contents describe, but see `entries(…clockOffset:)`.
+    public private(set) var date: Date
 
     // Hebrew date pieces (already localized / transliterated for the
     // current user setting).
@@ -147,10 +149,18 @@ extension HebcalEntry {
     }
 
     /// Entries for `dates`; safe to call from several threads at once.
+    /// With a `DebugClock` offset, `dates` are on the fake clock and each
+    /// entry is stamped `clockOffset` earlier, on the real clock WidgetKit
+    /// displays by.
     public static func entries(at dates: [Date], settings: HebcalSettings,
-                               calendar: Calendar = .current) -> [HebcalEntry] {
+                               calendar: Calendar = .current,
+                               clockOffset: TimeInterval = 0) -> [HebcalEntry] {
         let formatter = HebcalFormatter(settings: settings)
-        return dates.map { HebcalEntry(date: $0, formatter: formatter, calendar: calendar) }
+        return dates.map {
+            var entry = HebcalEntry(date: $0, formatter: formatter, calendar: calendar)
+            entry.date = $0.addingTimeInterval(-clockOffset)
+            return entry
+        }
     }
 
     /// Sparse timeline pivots starting at `date`: only the moments when the

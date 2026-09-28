@@ -12,6 +12,10 @@ struct TodayView: View {
     @ScaledMetric private var smallFontSize: CGFloat = 16
     @ScaledMetric private var largeFontSize: CGFloat = 18
     var item: DateItem
+    /// Hints that tapping the row opens a detail card.
+    var showsChevron = false
+    /// False when the Omer count is shown elsewhere on screen.
+    var showsOmer = true
     var gregDate: String {
         var s = item.dow + ", " + String(item.gregDay) + " " + item.gregMonth
         if item.gregYear != 0 {
@@ -25,8 +29,16 @@ struct TodayView: View {
     var isHebrew: Bool {
         item.lang == .he
     }
+    private var chevron: some View {
+        Image(systemName: isHebrew ? "chevron.left" : "chevron.right")
+            .font(.footnote)
+            .foregroundColor(.secondary)
+    }
     var body: some View {
         HStack {
+            if showsChevron && isHebrew {
+                chevron
+            }
             if isHebrew {
                 Spacer()
             }
@@ -45,7 +57,7 @@ struct TodayView: View {
                         .font(.system(size: largeFontSize, weight: .regular, design: .default))
                         .lineLimit(holiday.count > 19 ? 2 : 1)
                 }
-                if let omer = item.omer {
+                if showsOmer, let omer = item.omer {
                     Text(omer)
                         .foregroundColor(.secondary)
                         .font(.system(size: smallFontSize, weight: .regular, design: .default))
@@ -72,6 +84,10 @@ struct TodayView: View {
             }
             .minimumScaleFactor(0.6)
             .multilineTextAlignment(isHebrew ? .trailing : .leading)
+            if showsChevron && !isHebrew {
+                Spacer()
+                chevron
+            }
         }
     }
 }
@@ -89,4 +105,11 @@ struct TodayView: View {
         omer: "Omer: 31st day",
         dafyomi: "Pesachim 108"
     ))
+}
+
+#Preview("Omer row", traits: .fixedLayout(width: 300, height: 150)) {
+    let date = Calendar.current.date(from: DateComponents(year: 2027, month: 5, day: 10, hour: 12))!
+    TodayView(item: HebcalFormatter(settings: HebcalSettings(lang: .en))
+        .dateItem(for: date, calendar: .current, now: date, showYear: false, forceParsha: false),
+              showsChevron: true)
 }

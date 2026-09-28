@@ -6,23 +6,60 @@
 //
 
 import SwiftUI
+import HebcalWatchCore
 import os
+
+/// Screens pushed from the main screen. Every link in the stack is
+/// value-based: a `NavigationLink(value:)` inside a screen pushed with
+/// `NavigationLink(destination:)` pops right back off.
+enum Screen: Hashable {
+    case calendar, settings
+}
 
 struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject var modelData: ModelData
 
+    /// During the Omer, today's count gets a row of its own under Today,
+    /// linking to its card.
+    private var omerLink: (detail: DateItemDetail, label: String)? {
+        let today = modelData.todayDateItem
+        guard let detail = today.detail, case .omer = detail, let label = today.omer else {
+            return nil
+        }
+        return (detail, label)
+    }
+
     var body: some View {
         NavigationStack {
             List {
-                NavigationLink(destination: HDateList()) {
-                    TodayView(item: modelData.todayDateItem)
+                NavigationLink(value: Screen.calendar) {
+                    // The Omer row below already shows the count.
+                    TodayView(item: modelData.todayDateItem, showsOmer: omerLink == nil)
                 }
-                NavigationLink(destination: SettingsView()) {
+                if let omerLink {
+                    NavigationLink(value: omerLink.detail) {
+                        Label {
+                            Text(omerLink.label)
+                        } icon: {
+                            Text("🌾")
+                        }
+                    }
+                }
+                NavigationLink(value: Screen.settings) {
                     Label("Settings", systemImage: "gear")
                 }
             }
             .navigationTitle("Hebcal")
+            .navigationDestination(for: Screen.self) { screen in
+                switch screen {
+                case .calendar: HDateList()
+                case .settings: SettingsView()
+                }
+            }
+            .navigationDestination(for: DateItemDetail.self) { detail in
+                DateItemDetailView(detail: detail)
+            }
         }
         .onChange(of: scenePhase) { _, phase in
             switch phase {
