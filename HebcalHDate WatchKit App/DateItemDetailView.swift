@@ -55,13 +55,21 @@ struct ZmanimDetailView: View {
         .frame(maxWidth: .infinity, alignment: alignment)
     }
 
+    private func header(_ title: String) -> some View {
+        Text(title)
+            .font(.headline)
+            .foregroundColor(.yellow)
+            .lineLimit(1)
+            .frame(maxWidth: .infinity, alignment: alignment)
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
-                Text(zmanim.title)
-                    .font(.headline)
-                    .foregroundColor(.yellow)
-                    .frame(maxWidth: .infinity, alignment: alignment)
+                ViewThatFits(in: .horizontal) {
+                    header(zmanim.title)
+                    header(zmanim.shortTitle)
+                }
                 let rows = rows
                 ForEach(rows.indices, id: \.self) { i in
                     row(rows[i].emoji, rows[i].title, rows[i].time)

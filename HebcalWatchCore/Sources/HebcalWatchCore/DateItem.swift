@@ -75,15 +75,22 @@ private let shortMonth = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
 private let shortMonthHe = ["", "ינו", "פבר", "מרץ", "אפר", "מאי", "יונ",
                             "יול", "אוג", "ספט", "אוק", "נוב", "דצמ"]
 
+private let longMonth = ["", "January", "February", "March", "April", "May", "June",
+                         "July", "August", "September", "October", "November", "December"]
 private let longMonthHe = ["", "ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני",
                            "יולי", "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"]
 
 extension HebcalFormatter {
-    /// A Hebrew Gregorian date like "שישי, 2 אוקטובר": the weekday as in
-    /// `DateItem.dow`, with the full month name.
-    func hebrewGregorianTitle(for date: Date, calendar: Calendar) -> String {
+    /// A Gregorian date like "Fri, 2 October" or "שישי, 2 אוקטובר": the
+    /// weekday as in `DateItem.dow`, then the day and month, abbreviated
+    /// as in `DateItem.gregMonth` when `shortMonth` is set.
+    func gregorianTitle(for date: Date, calendar: Calendar, shortMonth abbreviated: Bool) -> String {
         let c = calendar.dateComponents([.weekday, .month, .day], from: date)
-        return "\(dayOfWeekHe[c.weekday!]), \(c.day!) \(longMonthHe[c.month!])"
+        let dow = isHebrew ? dayOfWeekHe[c.weekday!] : dayOfWeek[c.weekday!]
+        let month = isHebrew
+            ? (abbreviated ? shortMonthHe : longMonthHe)[c.month!]
+            : (abbreviated ? shortMonth : longMonth)[c.month!]
+        return "\(dow), \(c.day!) \(month)"
     }
 
     /// The row for Gregorian day `date`. The Gregorian year is shown when
