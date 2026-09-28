@@ -12,11 +12,11 @@ Legend: `A<br>B` two stacked lines · **bold** holiday name, large, no icon ·
 | Thu 2026-09-03 | 21 Elul | Nitzavim<br>Vayeilech | Nitzavim<br>Vayeilech | נצבים<br>וילך |
 | Fri 2026-09-04 | 22 Elul | Nitzavim<br>Vayeilech | Nitzavim<br>Vayeilech | נצבים<br>וילך |
 | **Sat 2026-09-05** | 23 Elul | Nitzavim<br>Vayeilech | Nitzavim<br>Vayeilech | נצבים<br>וילך |
-| Sun 2026-09-06 | 24 Elul | R.H.<br>🍏🍯 | R.H.<br>🍏🍯 | ראה״ש<br>🍏🍯 |
-| Mon 2026-09-07 | 25 Elul | R.H.<br>🍏🍯 | R.H.<br>🍏🍯 | ראה״ש<br>🍏🍯 |
-| Tue 2026-09-08 | 26 Elul | R.H.<br>🍏🍯 | R.H.<br>🍏🍯 | ראה״ש<br>🍏🍯 |
-| Wed 2026-09-09 | 27 Elul | R.H.<br>🍏🍯 | R.H.<br>🍏🍯 | ראה״ש<br>🍏🍯 |
-| Thu 2026-09-10 | 28 Elul | R.H.<br>🍏🍯 | R.H.<br>🍏🍯 | ראה״ש<br>🍏🍯 |
+| Sun 2026-09-06 | 24 Elul | R.H. 📜 | R.H. 📜 | ראה״ש 📜 |
+| Mon 2026-09-07 | 25 Elul | R.H. 📜 | R.H. 📜 | ראה״ש 📜 |
+| Tue 2026-09-08 | 26 Elul | R.H. 📜 | R.H. 📜 | ראה״ש 📜 |
+| Wed 2026-09-09 | 27 Elul | R.H. 📜 | R.H. 📜 | ראה״ש 📜 |
+| Thu 2026-09-10 | 28 Elul | R.H. 📜 | R.H. 📜 | ראה״ש 📜 |
 | Fri 2026-09-11 | 29 Elul | Erev<br>R.H. | Erev<br>R.H. | ערב<br>ראה״ש |
 | **Sat 2026-09-12** | 1 Tishrei | R.H.<br>5787 | R.H.<br>5787 | ראה״ש<br>תשפ״ז |
 | Sun 2026-09-13 | 2 Tishrei | R.H.<br>II | R.H.<br>II | ראש<br>השנה ב׳ |
@@ -28,9 +28,9 @@ Legend: `A<br>B` two stacked lines · **bold** holiday name, large, no icon ·
 | **Sat 2026-09-19** | 8 Tishrei | Ha’<br>azinu | Ha’<br>azinu | האזינו 📜 |
 | Sun 2026-09-20 | 9 Tishrei | Erev<br>Y.K. | Erev<br>Y.K. | ערב<br>יוה״כ |
 | Mon 2026-09-21 | 10 Tishrei | **Y.K.** | **Y.K.** | **יוה״כ** |
-| Tue 2026-09-22 | 11 Tishrei | Sukkot<br>🌿🍋 | Sukkos<br>🌿🍋 | סוכות<br>🌿🍋 |
-| Wed 2026-09-23 | 12 Tishrei | Sukkot<br>🌿🍋 | Sukkos<br>🌿🍋 | סוכות<br>🌿🍋 |
-| Thu 2026-09-24 | 13 Tishrei | Sukkot<br>🌿🍋 | Sukkos<br>🌿🍋 | סוכות<br>🌿🍋 |
+| Tue 2026-09-22 | 11 Tishrei | Sukkot 📜 | Sukkos 📜 | סוכות 📜 |
+| Wed 2026-09-23 | 12 Tishrei | Sukkot 📜 | Sukkos 📜 | סוכות 📜 |
+| Thu 2026-09-24 | 13 Tishrei | Sukkot 📜 | Sukkos 📜 | סוכות 📜 |
 | Fri 2026-09-25 | 14 Tishrei | Erev<br>Sukkot | Erev<br>Sukkos | ערב<br>סוכות |
 | **Sat 2026-09-26** | 15 Tishrei | Sukkot<br>I | Sukkos<br>I | סוכות<br>א׳ |
 | Sun 2026-09-27 | 16 Tishrei | Sukkot<br>II | Sukkos<br>II | סוכות<br>ב׳ |
@@ -76,7 +76,7 @@ Legend: `A<br>B` two stacked lines · **bold** holiday name, large, no icon ·
 | Fri 2026-11-06 | 26 Cheshvan | Chayei<br>Sara | Chayei<br>Sara | חיי<br>שרה |
 | **Sat 2026-11-07** | 27 Cheshvan | Chayei<br>Sara | Chayei<br>Sara | חיי<br>שרה |
 | Sun 2026-11-08 | 28 Cheshvan | Tol-<br>dot | Tol-<br>dos | תולדות 📜 |
-| Mon 2026-11-09 | 29 Cheshvan | **Sigd** | **Sigd** | **סיגד** |
+| Mon 2026-11-09 | 29 Cheshvan | Sigd<br>🇮🇱 | Sigd<br>🇮🇱 | סיגד<br>🇮🇱 |
 | Tue 2026-11-10 | 30 Cheshvan | R.Ch.<br>Kislev | R.Ch.<br>Kislev | ר״ח<br>כסלו |
 | Wed 2026-11-11 | 1 Kislev | R.Ch.<br>Kislev | R.Ch.<br>Kislev | ר״ח<br>כסלו |
 | Thu 2026-11-12 | 2 Kislev | Tol-<br>dot | Tol-<br>dos | תולדות 📜 |
@@ -103,12 +103,12 @@ Legend: `A<br>B` two stacked lines · **bold** holiday name, large, no icon ·
 | Thu 2026-12-03 | 23 Kislev | Vaye-<br>shev | Vaye-<br>shev | וישב 📜 |
 | Fri 2026-12-04 | 24 Kislev | **🕎**<br>1️⃣ 🕯️ | **🕎**<br>1️⃣ 🕯️ | חנוכה<br>א׳ נר |
 | **Sat 2026-12-05** | 25 Kislev | Vaye-<br>shev | Vaye-<br>shev | וישב 📜 |
-| Sun 2026-12-06 | 26 Kislev | **🕎**<br>Day 2️⃣ | **🕎**<br>Day 2️⃣ | חנוכה<br>ב׳ |
-| Mon 2026-12-07 | 27 Kislev | **🕎**<br>Day 3️⃣ | **🕎**<br>Day 3️⃣ | חנוכה<br>ג׳ |
-| Tue 2026-12-08 | 28 Kislev | **🕎**<br>Day 4️⃣ | **🕎**<br>Day 4️⃣ | חנוכה<br>ד׳ |
-| Wed 2026-12-09 | 29 Kislev | **🕎**<br>Day 5️⃣ | **🕎**<br>Day 5️⃣ | חנוכה<br>ה׳ |
-| Thu 2026-12-10 | 30 Kislev | **🕎**<br>Day 6️⃣ | **🕎**<br>Day 6️⃣ | חנוכה<br>ו׳ |
-| Fri 2026-12-11 | 1 Tevet | **🕎**<br>Day 7️⃣ | **🕎**<br>Day 7️⃣ | חנוכה<br>ז׳ |
+| Sun 2026-12-06 | 26 Kislev | **🕎**<br>Day 2️⃣ | **🕎**<br>Day 2️⃣ | חנוכה<br>2️⃣ |
+| Mon 2026-12-07 | 27 Kislev | **🕎**<br>Day 3️⃣ | **🕎**<br>Day 3️⃣ | חנוכה<br>3️⃣ |
+| Tue 2026-12-08 | 28 Kislev | **🕎**<br>Day 4️⃣ | **🕎**<br>Day 4️⃣ | חנוכה<br>4️⃣ |
+| Wed 2026-12-09 | 29 Kislev | **🕎**<br>Day 5️⃣ | **🕎**<br>Day 5️⃣ | חנוכה<br>5️⃣ |
+| Thu 2026-12-10 | 30 Kislev | **🕎**<br>Day 6️⃣ | **🕎**<br>Day 6️⃣ | חנוכה<br>6️⃣ |
+| Fri 2026-12-11 | 1 Tevet | **🕎**<br>Day 7️⃣ | **🕎**<br>Day 7️⃣ | חנוכה<br>7️⃣ |
 | **Sat 2026-12-12** | 2 Tevet | Mi-<br>ketz | Mi-<br>ketz | מקץ 📜 |
 | Sun 2026-12-13 | 3 Tevet | Vayi-<br>gash | Vayi-<br>gash | ויגש 📜 |
 | Mon 2026-12-14 | 4 Tevet | Vayi-<br>gash | Vayi-<br>gash | ויגש 📜 |
@@ -236,9 +236,9 @@ Legend: `A<br>B` two stacked lines · **bold** holiday name, large, no icon ·
 | Thu 2027-04-15 | 8 Nisan | Metz-<br>ora | Metz-<br>ora | מצרע 📜 |
 | Fri 2027-04-16 | 9 Nisan | Metz-<br>ora | Metz-<br>ora | מצרע 📜 |
 | **Sat 2027-04-17** | 10 Nisan | Metz-<br>ora | Metz-<br>ora | מצרע 📜 |
-| Sun 2027-04-18 | 11 Nisan | Pesach<br>🫓 | Pesach<br>🫓 | פסח<br>🫓 |
-| Mon 2027-04-19 | 12 Nisan | Pesach<br>🫓 | Pesach<br>🫓 | פסח<br>🫓 |
-| Tue 2027-04-20 | 13 Nisan | Pesach<br>🫓 | Pesach<br>🫓 | פסח<br>🫓 |
+| Sun 2027-04-18 | 11 Nisan | Pesach 📜 | Pesach 📜 | פסח 📜 |
+| Mon 2027-04-19 | 12 Nisan | Pesach 📜 | Pesach 📜 | פסח 📜 |
+| Tue 2027-04-20 | 13 Nisan | Pesach 📜 | Pesach 📜 | פסח 📜 |
 | Wed 2027-04-21 | 14 Nisan | Erev<br>Pesach | Erev<br>Pesach | ערב<br>פסח |
 | Thu 2027-04-22 | 15 Nisan | Pesach<br>I | Pesach<br>I | פסח<br>א׳ |
 | Fri 2027-04-23 | 16 Nisan | Pesach<br>II | Pesach<br>II | פסח<br>ב׳ |
@@ -259,8 +259,8 @@ Legend: `A<br>B` two stacked lines · **bold** holiday name, large, no icon ·
 | **Sat 2027-05-08** | 1 Iyyar | Kedo-<br>shim | Kedo-<br>shim | קדשים 📜 |
 | Sun 2027-05-09 | 2 Iyyar | Emor 📜 | Emor 📜 | אמור 📜 |
 | Mon 2027-05-10 | 3 Iyyar | Emor 📜 | Emor 📜 | אמור 📜 |
-| Tue 2027-05-11 | 4 Iyyar | Yom<br>HaZikaron | Yom<br>HaZikaron | יום<br>הזכרון |
-| Wed 2027-05-12 | 5 Iyyar | Yom<br>HaAtzma’ut | Yom<br>HaAtzma’ut | יום<br>העצמאות |
+| Tue 2027-05-11 | 4 Iyyar | Yom<br>HaZik. | Yom<br>HaZik. | יום<br>הזכרון |
+| Wed 2027-05-12 | 5 Iyyar | Yom<br>HaAtz. | Yom<br>HaAtz. | יוה״ע<br>🇮🇱 |
 | Thu 2027-05-13 | 6 Iyyar | Emor 📜 | Emor 📜 | אמור 📜 |
 | Fri 2027-05-14 | 7 Iyyar | Emor 📜 | Emor 📜 | אמור 📜 |
 | **Sat 2027-05-15** | 8 Iyyar | Emor 📜 | Emor 📜 | אמור 📜 |
@@ -283,12 +283,12 @@ Legend: `A<br>B` two stacked lines · **bold** holiday name, large, no icon ·
 | Tue 2027-06-01 | 25 Iyyar | Bamid<br>bar | Bamid<br>bar | במדבר 📜 |
 | Wed 2027-06-02 | 26 Iyyar | Bamid<br>bar | Bamid<br>bar | במדבר 📜 |
 | Thu 2027-06-03 | 27 Iyyar | Bamid<br>bar | Bamid<br>bar | במדבר 📜 |
-| Fri 2027-06-04 | 28 Iyyar | Yom<br>Yerushalayim | Yom<br>Yerushalayim | יום<br>ירושלים |
+| Fri 2027-06-04 | 28 Iyyar | Yom<br>Yerush. | Yom<br>Yerush. | יום<br>ירוש׳ |
 | **Sat 2027-06-05** | 29 Iyyar | Bamid<br>bar | Bamid<br>bar | במדבר 📜 |
 | Sun 2027-06-06 | 1 Sivan | R.Ch.<br>Sivan | R.Ch.<br>Sivan | ר״ח<br>סיון |
-| Mon 2027-06-07 | 2 Sivan | Shavuot<br>⛰️🌸 | Shavuos<br>⛰️🌸 | שבועות<br>⛰️🌸 |
-| Tue 2027-06-08 | 3 Sivan | Shavuot<br>⛰️🌸 | Shavuos<br>⛰️🌸 | שבועות<br>⛰️🌸 |
-| Wed 2027-06-09 | 4 Sivan | Shavuot<br>⛰️🌸 | Shavuos<br>⛰️🌸 | שבועות<br>⛰️🌸 |
+| Mon 2027-06-07 | 2 Sivan | Shavuot 📜 | Shavuos 📜 | שבועות 📜 |
+| Tue 2027-06-08 | 3 Sivan | Shavuot 📜 | Shavuos 📜 | שבועות 📜 |
+| Wed 2027-06-09 | 4 Sivan | Shavuot 📜 | Shavuos 📜 | שבועות 📜 |
 | Thu 2027-06-10 | 5 Sivan | Erev<br>Shavuot | Erev<br>Shavuos | ערב<br>שבועות |
 | Fri 2027-06-11 | 6 Sivan | Shavuot<br>I | Shavuos<br>I | שבועות<br>א׳ |
 | **Sat 2027-06-12** | 7 Sivan | Shavuot<br>II | Shavuos<br>II | שבועות<br>ב׳ |

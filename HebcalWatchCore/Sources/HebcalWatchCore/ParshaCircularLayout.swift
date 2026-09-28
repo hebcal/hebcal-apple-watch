@@ -16,10 +16,12 @@ public enum ParshaCircularLayout: Equatable {
     case emojiAbove(String, String)
     /// Today is a one-word holiday (e.g. "Y.K."): large text, no Torah icon.
     case holiday(String)
-    /// A one-word holiday (e.g. "Purim", or "R.H." the week before Rosh
-    /// Hashana) with its emoji below in place of the Torah icon.
+    /// Today is a one-word holiday (e.g. "Purim") with its emoji below in
+    /// place of the Torah icon.
     case holidayWithEmoji(String, String)
-    /// A one-word parsha (e.g. "Noach") with a Torah icon below it.
+    /// A one-word parsha (e.g. "Noach") with a Torah icon below it. Also
+    /// the upcoming Shabbat's holiday reading (e.g. "Sukkot" or "R.H." the
+    /// week before), so it reads as a Torah portion, not today's holiday.
     case parsha(String)
 
     public init(entry: HebcalEntry) {

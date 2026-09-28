@@ -34,8 +34,10 @@ public struct HebcalEntry {
     //   displaces it (e.g. "Sukkot").
     public let parshaShowsHoliday: Bool    // true when a holiday of today replaces the parsha
     public let parshaParts: [String]       // 1 or 2 elements for stacked layouts
-    // Shown below a one-line holiday in place of the Torah icon: "Purim"
-    // with 🎭️📜, or "R.H." with 🍏🍯 the week before Rosh Hashana.
+    // Shown below a one-line holiday of today in place of the Torah icon:
+    // "Purim" with 🎭️📜. Never set for an upcoming holiday's reading (e.g.
+    // "Sukkot" the week before), which keeps the Torah icon so it doesn't
+    // read as if today were the holiday.
     public let parshaEmoji: String?
     public let parshaPrefixed: String      // "Parashat Behar-Bechukotai", or the holiday name on a holiday
     public let parshaShort: String         // "Behar-Bechukotai", or the abbreviated holiday name
@@ -130,8 +132,7 @@ extension HebcalEntry {
         self.parshaParts = holidayTodayShort.map { Abbreviations.splitParsha($0) }
             ?? parshaName.map { Abbreviations.splitParsha($0) }
             ?? [fallbackShort]
-        self.parshaEmoji = holidayToday != nil ? holidayToday?.emoji
-            : formatter.holidayEmojiReplacingParsha(on: hdate)
+        self.parshaEmoji = holidayToday?.emoji
         self.parshaPrefixed = holidayTodayName ?? "\(parshaPrefix) \(parshaForFallback)"
         self.parshaShort = holidayTodayShort ?? parshaForFallback
         self.richHoliday = richHoliday
@@ -145,18 +146,11 @@ extension HebcalEntry {
         self.inlineTinyText = inline("\(dayNum) \(Abbreviations.monthTiny[monthKey] ?? monthShort)")
     }
 
-    /// hebcal-swift keeps an unsynchronized global cache (`edCache` in
-    /// hdate.swift), and WidgetKit may ask the three widgets for timelines
-    /// concurrently, so timelines are built one at a time.
-    private static let lock = NSLock()
-
     /// Entries for `dates`; safe to call from several threads at once.
     public static func entries(at dates: [Date], settings: HebcalSettings,
                                calendar: Calendar = .current) -> [HebcalEntry] {
-        lock.withLock {
-            let formatter = HebcalFormatter(settings: settings)
-            return dates.map { HebcalEntry(date: $0, formatter: formatter, calendar: calendar) }
-        }
+        let formatter = HebcalFormatter(settings: settings)
+        return dates.map { HebcalEntry(date: $0, formatter: formatter, calendar: calendar) }
     }
 
     /// Sparse timeline pivots starting at `date`: only the moments when the

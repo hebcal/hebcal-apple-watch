@@ -474,7 +474,7 @@ private func parshaPreview(_ year: Int, _ month: Int, _ day: Int,
                          settings: HebcalSettings(il: il, lang: lang))
 }
 
-// The week before Rosh Hashana: abbreviated, with its emoji below.
+// The week before Rosh Hashana: abbreviated, with the Torah icon below.
 #Preview("Parsha circular R.H. week", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
@@ -601,10 +601,126 @@ private func parshaPreview(_ year: Int, _ month: Int, _ day: Int,
     parshaPreview(2026, 11, 11, lang: .he)
 }
 
-// Israel: a civic day with no nikud once hebcal-swift 425ef8f is in.
+// Israeli modern holidays (Israel schedule only). Long names like the Yom
+// HaAliyah School Observance and Rabin Memorial Day shrink to fit; the
+// civic days have no nikud in Hebrew once hebcal-swift 425ef8f is in.
+#Preview("Parsha circular Yom HaAliyah School Observance (Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 10, 18, lang: .en, il: true)
+}
+
+#Preview("Parsha circular Yom HaAliyah School Observance (he, Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 10, 18, lang: .he, il: true)
+}
+
+#Preview("Parsha circular Rabin Memorial Day (Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 10, 22, lang: .en, il: true)
+}
+
+#Preview("Parsha circular Rabin Memorial Day (he, Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 10, 22, lang: .he, il: true)
+}
+
+#Preview("Parsha circular Sigd (Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 11, 9, lang: .en, il: true)
+}
+
+#Preview("Parsha circular Sigd (he, Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2026, 11, 9, lang: .he, il: true)
+}
+
+#Preview("Parsha circular Family Day (Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 2, 7, lang: .en, il: true)
+}
+
+#Preview("Parsha circular Family Day (he, Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 2, 7, lang: .he, il: true)
+}
+
+#Preview("Parsha circular Yom HaShoah (Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 5, 4, lang: .en, il: true)
+}
+
+#Preview("Parsha circular Yom HaShoah (he, Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 5, 4, lang: .he, il: true)
+}
+
+#Preview("Parsha circular Yom HaZikaron (Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 5, 11, lang: .en, il: true)
+}
+
+#Preview("Parsha circular Yom HaZikaron (he, Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 5, 11, lang: .he, il: true)
+}
+
+#Preview("Parsha circular Yom HaAtzma'ut (Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 5, 12, lang: .en, il: true)
+}
+
+#Preview("Parsha circular Yom HaAtzma'ut (he, Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 5, 12, lang: .he, il: true)
+}
+
+#Preview("Parsha circular Herzl Day (Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 5, 17, lang: .en, il: true)
+}
+
 #Preview("Parsha circular Herzl Day (he, Israel)", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
     parshaPreview(2027, 5, 17, lang: .he, il: true)
+}
+
+#Preview("Parsha circular Yom Yerushalayim (Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 6, 4, lang: .en, il: true)
+}
+
+#Preview("Parsha circular Yom Yerushalayim (he, Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 6, 4, lang: .he, il: true)
+}
+
+#Preview("Parsha circular Jabotinsky Day (Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 8, 3, lang: .en, il: true)
+}
+
+#Preview("Parsha circular Jabotinsky Day (he, Israel)", as: .accessoryCircular) {
+    ParshaWidget()
+} timeline: {
+    parshaPreview(2027, 8, 3, lang: .he, il: true)
 }
 #endif

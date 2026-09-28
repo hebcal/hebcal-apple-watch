@@ -5,10 +5,6 @@
 //  Focused checks of the helpers. The year-long view of the Parsha
 //  complication is in ParshaCircularYearTests.
 //
-//  Every suite is nested in `HebcalWatchCoreTests`, which is `.serialized`:
-//  hebcal-swift has an unsynchronized global cache, so tests calling into it
-//  in parallel crash.
-//
 
 import Foundation
 import Hebcal
@@ -29,7 +25,7 @@ private func entry(_ y: Int, _ m: Int, _ d: Int, _ lang: TranslationLang = .en, 
     HebcalEntry(date: date(y, m, d), formatter: formatter(lang, il: il), calendar: calendar)
 }
 
-@Suite(.serialized) struct HebcalWatchCoreTests {}
+@Suite struct HebcalWatchCoreTests {}
 
 // MARK: - Abbreviations
 
@@ -163,11 +159,12 @@ extension HebcalWatchCoreTests {
             // Yom Kippur (weekday holiday): the holiday, not "Parashat Sukkot".
             (2026, 9, 21, TranslationLang.en, ParshaCircularLayout.holiday("Y.K.")),
             (2026, 9, 21, .he, .holiday("יוה״כ")),
-            // Day after YK: the upcoming Shabbat's holiday reading.
-            (2026, 9, 22, .en, .holidayWithEmoji("Sukkot", "🌿🍋")),
-            // The week before Rosh Hashana: abbreviated, with its emoji.
-            (2026, 9, 7, .en, .holidayWithEmoji("R.H.", "🍏🍯")),
-            (2026, 9, 7, .he, .holidayWithEmoji("ראה״ש", "🍏🍯")),
+            // Day after YK: the upcoming Shabbat's holiday reading, with the
+            // Torah icon rather than the holiday's emoji.
+            (2026, 9, 22, .en, .parsha("Sukkot")),
+            // The week before Rosh Hashana: abbreviated, with the Torah icon.
+            (2026, 9, 7, .en, .parsha("R.H.")),
+            (2026, 9, 7, .he, .parsha("ראה״ש")),
             // Shabbat Shuva on Shabbat itself: the weekly parsha.
             (2026, 9, 19, .en, .twoLines("Ha’", "azinu")),
             // Rosh Chodesh Kislev on a weekday: the holiday.
@@ -177,7 +174,7 @@ extension HebcalWatchCoreTests {
             (2027, 3, 22, .en, .twoLines("Erev", "Purim")),
             (2027, 3, 23, .en, .holidayWithEmoji("Purim", "🎭️📜")),
             (2026, 12, 7, .en, .emojiAbove("🕎", "Day 3️⃣")),
-            (2026, 12, 7, .he, .twoLines("חנוכה", "ג׳")),
+            (2026, 12, 7, .he, .twoLines("חנוכה", "3️⃣")),
             (2027, 2, 22, .he, .parsha("כי תשא")),
             (2027, 3, 24, .en, .twoLines("Shushan", "Purim")),
         ])

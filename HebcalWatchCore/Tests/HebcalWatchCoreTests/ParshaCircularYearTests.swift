@@ -27,6 +27,7 @@ extension HebcalWatchCoreTests {
         ]
 
         static func report(il: Bool, from start: (Int, Int, Int), through end: (Int, Int, Int)) -> String {
+            let dateFormatter = makeDateFormatter()
             let formatters = languages.map { HebcalFormatter(settings: HebcalSettings(il: il, lang: $0.lang)) }
             let hebrewDates = HebcalFormatter(settings: HebcalSettings(il: il, lang: .en))
             var lines = [
@@ -77,14 +78,17 @@ extension HebcalWatchCoreTests {
             return calendar
         }()
 
-        static let dateFormatter: DateFormatter = {
+        // DateFormatter isn't thread-safe, and the two `fullYear(il:)` cases
+        // run concurrently, so each call gets its own instance rather than
+        // sharing one via `static let`.
+        static func makeDateFormatter() -> DateFormatter {
             let formatter = DateFormatter()
             formatter.calendar = calendar
             formatter.timeZone = calendar.timeZone
             formatter.locale = Locale(identifier: "en_US_POSIX")
             formatter.dateFormat = "EEE yyyy-MM-dd"
             return formatter
-        }()
+        }
 
         static func noon(_ ymd: (Int, Int, Int)) -> Date {
             calendar.date(from: DateComponents(year: ymd.0, month: ymd.1, day: ymd.2, hour: 12))!
