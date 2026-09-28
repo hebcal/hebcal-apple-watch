@@ -51,11 +51,23 @@ struct TodayView: View {
                     .foregroundColor(.white)
                     .font(.system(size: largeFontSize, weight: .regular, design: .default))
                     .lineLimit(1)
-                ForEach(item.holidays, id: \.self) { holiday in
-                    Text(holiday)
-                        .foregroundColor(.yellow)
-                        .font(.system(size: largeFontSize, weight: .regular, design: .default))
-                        .lineLimit(holiday.count > 19 ? 2 : 1)
+                // The full name if it fits on one line, else the abbreviated
+                // one ("R.Ch. Cheshvan"), else the abbreviated one wrapped.
+                ForEach(item.holidays.indices, id: \.self) { i in
+                    let holiday = item.holidays[i]
+                    let short = item.holidaysShort[i]
+                    ViewThatFits(in: .horizontal) {
+                        Text(holiday)
+                            .lineLimit(1)
+                        if short != holiday {
+                            Text(short)
+                                .lineLimit(1)
+                        }
+                        Text(short)
+                            .lineLimit(2)
+                    }
+                    .foregroundColor(.yellow)
+                    .font(.system(size: largeFontSize, weight: .regular, design: .default))
                 }
                 if showsOmer, let omer = item.omer {
                     Text(omer)
