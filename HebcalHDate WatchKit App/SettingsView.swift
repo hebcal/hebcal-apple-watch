@@ -22,17 +22,17 @@ struct SettingsView: View {
 
     var ilFooter: LocalizedStringKey {
         modelData.settings.il
-            ? "Holidays and Torah readings follow the Israel schedule."
-            : "Holidays and Torah readings follow the Diaspora schedule."
+            ? "Holidays and Torah readings follow the Israel schedule"
+            : "Holidays and Torah readings follow the Diaspora schedule"
     }
 
     var locationFooter: LocalizedStringKey {
         if modelData.locationManager.isDenied {
-            return "Location access is off for Hebcal. Turn it on in the Settings app under Privacy & Security › Location Services."
+            return "Location access is off for Hebcal. Turn it on in the Settings app under Privacy & Security › Location Services"
         }
         return modelData.settings.useLocation
-            ? "Hebrew date changes at sunset; candle-lighting and Havdalah times are shown."
-            : "For sunset, candle-lighting and Havdalah times. Otherwise the Hebrew date changes at 8 PM."
+            ? "Hebrew date changes at sunset; candle-lighting and Havdalah times are shown"
+            : "For sunset, candle-lighting and Havdalah times. Otherwise the Hebrew date changes at 8 PM"
     }
 
     var body: some View {
