@@ -10,6 +10,13 @@
 import Foundation
 import Hebcal
 
+// UserDefaults predates Sendable but is documented as thread-safe
+// (https://developer.apple.com/documentation/foundation/userdefaults); this
+// lets `appGroupDefaults` be a `static let` under Swift 6's strict
+// concurrency checking, since WidgetKit can request timelines for the three
+// widgets concurrently, each reading it.
+extension UserDefaults: @retroactive @unchecked Sendable {}
+
 public struct HebcalSettings: Equatable {
     /// Israel (true) or Diaspora (false) holiday and Torah reading schedule.
     public var il: Bool

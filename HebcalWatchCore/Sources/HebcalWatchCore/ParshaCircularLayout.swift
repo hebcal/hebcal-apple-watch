@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum ParshaCircularLayout: Equatable {
+public enum ParshaCircularLayout: Equatable, Sendable {
     /// Two stacked lines, e.g. "Bere-" / "sheet", "Ki" / "Tavo", "Sh." / "Shuva".
     case twoLines(String, String)
     /// Two lines whose first is only an emoji, e.g. "🕎" / "Day 4️⃣": the

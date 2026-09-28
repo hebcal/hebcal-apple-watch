@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version:6.0
 
 // Pure calendar/formatting logic shared by the watch app and the widget
 // extension. No SwiftUI or WidgetKit here, so everything can be unit-tested
