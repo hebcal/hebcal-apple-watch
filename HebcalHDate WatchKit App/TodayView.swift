@@ -1,13 +1,12 @@
 //
 //  TodayView.swift
-//  HebcalHDate WatchKit Extension
+//  HebcalHDate WatchKit App
 //
 //  Created by Michael Radwin on 9/30/21.
 //
 
-import Foundation
 import SwiftUI
-import Hebcal
+import HebcalWatchCore
 
 struct TodayView: View {
     @ScaledMetric private var smallFontSize: CGFloat = 16
@@ -18,8 +17,8 @@ struct TodayView: View {
         if item.gregYear != 0 {
             s += " " + String(item.gregYear)
         }
-        if item.emoji != nil {
-            s += "  " + item.emoji!
+        if let emoji = item.emoji {
+            s += "  " + emoji
         }
         return s
     }
@@ -46,26 +45,26 @@ struct TodayView: View {
                         .font(.system(size: largeFontSize, weight: .regular, design: .default))
                         .lineLimit(holiday.count > 19 ? 2 : 1)
                 }
-                item.omer.map({
-                    Text($0)
+                if let omer = item.omer {
+                    Text(omer)
                         .foregroundColor(.secondary)
                         .font(.system(size: smallFontSize, weight: .regular, design: .default))
                         .lineLimit(1)
-                })
-                if item.parsha != nil {
+                }
+                if let parsha = item.parsha {
                     HStack {
                         Image("torah-235339")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 16, height: 16)
-                        Text(item.parsha!)
+                        Text(parsha)
                             .foregroundColor(Color(red: 1.0, green: 0.75, blue: 0.0))
                             .font(.system(size: largeFontSize, weight: .regular, design: .default))
                             .lineLimit(1)
                     }
                 }
-                if item.dafyomi != nil {
-                    Text(item.dafyomi!)
+                if let dafyomi = item.dafyomi {
+                    Text(dafyomi)
                         .foregroundColor(.secondary)
                         .font(.system(size: smallFontSize, weight: .regular, design: .default))
                         .lineLimit(1)
@@ -78,21 +77,16 @@ struct TodayView: View {
 }
 
 
-struct TodayView_Previews: PreviewProvider {
-    static var item = DateItem(
-         id: 1,
-         lang: .en,
-         dow: "Wed", gregDay: 28, gregMonth: "Apr",
-         gregYear: 2021,
-         hdate: "16 Iyyar 5782", parsha: "Emor",
-         holidays: ["Lag BaOmer"],
-         emoji: "😀",
-         omer: "Omer: 31st day",
-         dafyomi: "Pesachim 108"
-    )
-
-    static var previews: some View {
-        TodayView(item: item)
-            .previewLayout(.fixed(width: 300, height: 150))
-    }
+#Preview(traits: .fixedLayout(width: 300, height: 150)) {
+    TodayView(item: DateItem(
+        id: 1,
+        lang: .en,
+        dow: "Wed", gregDay: 28, gregMonth: "Apr",
+        gregYear: 2021,
+        hdate: "16 Iyyar 5782", parsha: "Emor",
+        holidays: ["Lag BaOmer"],
+        emoji: "😀",
+        omer: "Omer: 31st day",
+        dafyomi: "Pesachim 108"
+    ))
 }

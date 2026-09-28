@@ -1,6 +1,6 @@
 //
 //  ExtensionDelegate.swift
-//  HebcalHDate WatchKit Extension
+//  HebcalHDate WatchKit App
 //
 //  Created by Michael Radwin on 9/12/21.
 //
@@ -15,17 +15,14 @@ private let widgetExtensionBundleIdentifier = "com.hebcal.HebcalHDate.watchkitap
 
 // The app's extension delegate.
 class ExtensionDelegate: NSObject, WKApplicationDelegate {
-    let logger = Logger(subsystem: "com.hebcal.HebcalHDate.watchkitapp.watchkitextension.ExtensionDelegate",
-                        category: "Extension Delegate")
-
     // MARK: - Delegate Methods
 
     // Called when a background task occurs.
     func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
-        logger.debug("Handling a background task...")
-        logger.debug("App State: \(WKApplication.shared().applicationState.rawValue)")
+        Logger.app.debug("Handling a background task...")
+        Logger.app.debug("App State: \(WKApplication.shared().applicationState.rawValue)")
         for task in backgroundTasks {
-            logger.debug("Task: \(task)")
+            Logger.app.debug("Task: \(task)")
             switch task {
             // Handle background refresh tasks.
             case let backgroundTask as WKApplicationRefreshBackgroundTask:
@@ -70,17 +67,17 @@ extension ExtensionDelegate: CLKComplicationWidgetMigrator {
 
 // Schedule the next background refresh task.
 
-let scheduleLogger = Logger(
-    subsystem: "com.hebcal.HebcalHDate.watchkitapp.watchkitextension.scheduleLogger",
-    category: "Scheduler")
-
 private let backgroundRefreshInterval = 2.0 * 60.0 * 60.0
 func scheduleBackgroundRefreshTasks() {
     let refreshTime = Date().advanced(by: backgroundRefreshInterval)
     WKApplication.shared().scheduleBackgroundRefresh(
         withPreferredDate: refreshTime,
         userInfo: nil
-    ) { (error) in
-        scheduleLogger.debug("Scheduled the next background refresh task.")
+    ) { error in
+        if let error {
+            Logger.app.error("Couldn't schedule a background refresh: \(error.localizedDescription)")
+        } else {
+            Logger.app.debug("Scheduled the next background refresh task.")
+        }
     }
 }

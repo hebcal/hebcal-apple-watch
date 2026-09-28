@@ -1,6 +1,6 @@
 //
 //  HebcalHDateApp.swift
-//  HebcalHDate WatchKit Extension
+//  HebcalHDate WatchKit App
 //
 //  Created by Michael Radwin on 8/17/21.
 //
@@ -11,12 +11,12 @@ import SwiftUI
 struct HebcalHDateApp: App {
     @WKApplicationDelegateAdaptor private var appDelegate: ExtensionDelegate
 
-    @StateObject var settings = ModelData.shared
+    @StateObject private var modelData = ModelData.shared
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(settings)
+                .environmentObject(modelData)
         }
     }
 }

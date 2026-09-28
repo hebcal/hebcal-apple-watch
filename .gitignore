@@ -1,2 +1,7 @@
 .DS_Store
 xcuserdata/
+
+# Swift package build output and snapshot-test mismatches
+.build/
+.swiftpm/
+*.actual.md

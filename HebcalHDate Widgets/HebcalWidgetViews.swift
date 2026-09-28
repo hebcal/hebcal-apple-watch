@@ -14,6 +14,7 @@
 
 import SwiftUI
 import WidgetKit
+import HebcalWatchCore
 
 private let goldTint = Color(red: 1.0, green: 0.75, blue: 0.0)
 
@@ -97,41 +98,31 @@ struct HebcalRectangularView: View {
             .widgetAccentable()
             .lineLimit(1)
             .minimumScaleFactor(0.6)
-            if entry.richHoliday != nil {
+            if let holiday = entry.richHoliday {
                 ViewThatFits(in: .horizontal) {
-                    Text(entry.richHoliday!)
-                    Text(entry.richHolidayShort!)
+                    Text(holiday)
+                    Text(entry.richHolidayShort ?? holiday)
                 }
                 .foregroundColor(.yellow)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
             }
-            if entry.parshaName != nil {
+            // This week's parsha; when there's neither a parsha nor a holiday,
+            // the holiday that replaces the upcoming Shabbat's reading.
+            if let parsha = entry.parshaName ?? (entry.richHoliday == nil ? entry.parshaForFallback : nil) {
                 HStack {
                     Image("torah-235339")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 16, height: 16)
-                    Text(entry.parshaName!)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.6)
-                        .foregroundColor(goldTint)
-                }
-            } else if entry.richHoliday == nil {
-                // Show the Torah icon before upcoming Shabbat holiday
-                HStack {
-                    Image("torah-235339")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 16, height: 16)
-                    Text(entry.parshaForFallback)
+                    Text(parsha)
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
                         .foregroundColor(goldTint)
                 }
             }
-            if entry.omerToday != nil {
-                Text(entry.omerToday!)
+            if let omer = entry.omerToday {
+                Text(omer)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
                     .foregroundColor(.secondary)
@@ -143,7 +134,8 @@ struct HebcalRectangularView: View {
 
 // MARK: - Parsha
 
-/// Accessory circular for Torah portion: 1 or 2 stacked lines.
+/// Accessory circular for Torah portion: 1 or 2 stacked lines. Which
+/// layout is used is decided (and unit-tested) in ParshaCircularLayout.
 struct ParshaCircularView: View {
     let entry: HebcalEntry
     // Starting sizes; minimumScaleFactor shrinks long names to fit the circle.
@@ -152,35 +144,35 @@ struct ParshaCircularView: View {
     @ScaledMetric private var twoLineFontSize: CGFloat = 13
 
     var body: some View {
-        let parts = entry.parshaParts
-        if parts.count >= 2 {
+        switch ParshaCircularLayout(entry: entry) {
+        case let .twoLines(first, second):
             VStack(spacing: 0) {
-                Text(parts[0])
+                Text(first)
                     .font(.system(size: twoLineFontSize, weight: .semibold))
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
-                Text(parts[1])
+                Text(second)
                     .font(.system(size: twoLineFontSize, weight: .semibold))
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
             }
             .widgetAccentable()
-        } else if entry.parshaShowsHoliday {
+        case let .holiday(name):
             // Today is itself a one-word holiday (e.g. "Y.K."): show just its
             // name, with no Torah icon (it isn't a Shabbat Torah reading).
-            Text(parts.first ?? "")
+            Text(name)
                 .font(.system(size: holidayFontSize, weight: .semibold))
                 .lineLimit(1)
                 .minimumScaleFactor(0.3)
                 .padding(.horizontal, 2)
                 .widgetAccentable()
-        } else {
+        case let .parsha(name):
             // Single-line parsha: fill the second line with a Torah icon
             VStack(spacing: 1) {
                 // The text sits above the circle's center, where the circular
                 // mask is narrower, so inset it to keep long names like
                 // "Vayechi" from being clipped at the edges.
-                Text(parts.first ?? "")
+                Text(name)
                     .font(.system(size: singleLineFontSize, weight: .semibold))
                     .lineLimit(1)
                     .minimumScaleFactor(0.3)
@@ -288,31 +280,31 @@ private func previewNoon(year: Int, month: Int, day: Int) -> Date {
 #Preview("Yom Kippur — Sep 21, 2026", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 9, day: 21))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 9, day: 21))
 }
 
 #Preview("YK — Rectangular", as: .accessoryRectangular) {
     HebcalWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 9, day: 21))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 9, day: 21))
 }
 
 #Preview("RCh Chanukah weekday — Rectangular", as: .accessoryRectangular) {
     HebcalWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 12, day: 10))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 12, day: 10))
 }
 
 #Preview("Pesach VI (CH’’M) — Rectangular", as: .accessoryRectangular) {
     HebcalWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2027, month: 4, day: 27))
+    HebcalProvider.entry(for: previewNoon(year: 2027, month: 4, day: 27))
 }
 
 #Preview("Day after — Sep 22, 2026", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 9, day: 22))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 9, day: 22))
 }
 
 // Oct 7, 2026 = 26 Tishrei 5787, an ordinary day just after Sukkot/Simchat
@@ -320,49 +312,49 @@ private func previewNoon(year: Int, month: Int, day: Int) -> Date {
 #Preview("Oct 7, 2026 — Rectangular", as: .accessoryRectangular) {
     HebcalWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 10, day: 7))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 10, day: 7))
 }
 
 #Preview("Oct 7, 2026 — Inline", as: .accessoryInline) {
     HebcalWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 10, day: 7))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 10, day: 7))
 }
 
 #Preview("Oct 7, 2026 — HDate Circular", as: .accessoryCircular) {
     HDateWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 10, day: 7))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 10, day: 7))
 }
 
 #Preview("Oct 7, 2026 — HDate Corner", as: .accessoryCorner) {
     HDateWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 10, day: 7))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 10, day: 7))
 }
 
 #Preview("Oct 7, 2026 — HDate Inline", as: .accessoryInline) {
     HDateWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 10, day: 7))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 10, day: 7))
 }
 
 #Preview("Oct 7, 2026 — Parsha Circular", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 10, day: 7))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 10, day: 7))
 }
 
 #Preview("Parsha circular Noach", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 10, day: 15))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 10, day: 15))
 }
 
 #Preview("Parsha circular Vayechi", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 12, day: 25))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 12, day: 25))
 }
 
 // Parsha names with an apostrophe, which Sedra returns as ’ and which
@@ -371,19 +363,19 @@ private func previewNoon(year: Int, month: Int, day: Int) -> Date {
 #Preview("Parsha circular Beha'alotcha (Diaspora)", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 6, day: 3))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 6, day: 3))
 }
 
 #Preview("Parsha circular Sh'lach (Diaspora)", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 6, day: 10))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 6, day: 10))
 }
 
 #Preview("Parsha circular Ha'azinu", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 9, day: 16))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 9, day: 16))
 }
 
 // Shabbat Shuva on Shabbat itself: shows the weekly parsha (Ha'azinu),
@@ -391,39 +383,39 @@ private func previewNoon(year: Int, month: Int, day: Int) -> Date {
 #Preview("Parsha circular Shabbat Shuva", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 9, day: 19))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 9, day: 19))
 }
 
 #Preview("Shabbat Shuva — Inline", as: .accessoryInline) {
     HebcalWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 9, day: 19))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 9, day: 19))
 }
 
 // Rosh Chodesh Kislev on a weekday (Wed Nov 11, 2026): shows the holiday.
 #Preview("Parsha circular Rosh Chodesh weekday", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2026, month: 11, day: 11))
+    HebcalProvider.entry(for: previewNoon(year: 2026, month: 11, day: 11))
 }
 
 #Preview("Parsha circular Erev Purim", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2027, month: 3, day: 22))
+    HebcalProvider.entry(for: previewNoon(year: 2027, month: 3, day: 22))
 }
 
 
 #Preview("Parsha circular Purim", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2027, month: 3, day: 23))
+    HebcalProvider.entry(for: previewNoon(year: 2027, month: 3, day: 23))
 }
 
 #Preview("Parsha circular Shushan Purim", as: .accessoryCircular) {
     ParshaWidget()
 } timeline: {
-    HebcalProvider.makeEntry(for: previewNoon(year: 2027, month: 3, day: 24))
+    HebcalProvider.entry(for: previewNoon(year: 2027, month: 3, day: 24))
 }
 
 

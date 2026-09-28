@@ -1,0 +1,182 @@
+//
+//  Abbreviations.swift
+//  HebcalWatchCore
+//
+//  Pixel-budgeted abbreviations for month, holiday and parsha names, and
+//  the helper that splits a parsha name across two lines. The widths were
+//  tuned for each watch face family on the legacy ClockKit complications.
+//  When a name doesn't fit on a particular face, the fix usually belongs in
+//  these tables rather than in layout code.
+//
+//  All tables are keyed with plain ASCII ' (e.g. "Sh'vat"), but Hebcal's
+//  lookupTranslation() returns ’ for Sephardic and Ashkenazi, so always look
+//  names up via tableKey(). Ashkenazi spellings that differ (e.g. "Teves")
+//  need their own entries.
+//
+
+import Foundation
+
+enum Abbreviations {
+    /// Normalizes a translated name (’ → ') for lookup in these tables.
+    static func tableKey(_ name: String) -> String {
+        return name.replacingOccurrences(of: "’", with: "'")
+    }
+
+    /// Holiday names short enough for the narrow complication families.
+    static let holiday: [String: String] = [
+        "Rosh Chodesh": "R.Ch.",
+        "Erev Rosh Hashana": "Erev R.H.",
+        "Rosh Hashana": "R.H.",
+        "Rosh Hashana II": "R.H. II",
+        "Rosh Hashana LaBehemot": "R.H. LaBehemot",
+        "Erev Yom Kippur": "Erev Y.K.",
+        "Simchat Torah": "Sim. Torah",
+        "Simchas Torah": "Sim. Torah",
+        "Sukkot VII (Hoshana Raba)": "Hoshana Raba",
+        "Sukkos VII (Hoshana Raba)": "Hoshana Raba",
+        "Shmini Atzeres": "Shmini Atz.",
+        "Shmini Atzeret": "Shmini Atz.",
+        "Tish'a B'Av (observed)": "Tish’a B’Av (obs.)",
+        "Yom Kippur": "Y.K.",
+        "Chanukah: 1 Candle": "🕎 1️⃣ 🕯️",
+        "Chanukah: 2 Candles": "🕎 Day 1️⃣",
+        "Chanukah: 3 Candles": "🕎 Day 2️⃣",
+        "Chanukah: 4 Candles": "🕎 Day 3️⃣",
+        "Chanukah: 5 Candles": "🕎 Day 4️⃣",
+        "Chanukah: 6 Candles": "🕎 Day 5️⃣",
+        "Chanukah: 7 Candles": "🕎 Day 6️⃣",
+        "Chanukah: 8 Candles": "🕎 Day 7️⃣",
+        "Chanukah: 8th Day": "🕎 Day 8️⃣",
+        "ראש חודש": "ר״ח",
+        "ערב ראש השנה": "ערב ראה״ש",
+        "ראש השנה": "ראה״ש",
+        "ערב יום כפור": "ערב יוה״כ",
+        "יום כפור": "יוה״כ",
+        "ראש השנה למעשר בהמה": "ראה״ש לבהמות",
+        "סוכות ז׳ (הושענא רבה)": "הושענא רבה",
+    ]
+
+    // Two-line stack abbreviations (graphic circular, modular small, etc.).
+    // nil means "the full name fits, no abbreviation needed".
+    static let month: [String: String?] = [
+        "Adar": nil,
+        "Adar I": "Adar1",
+        "Adar II": "Adar2",
+        "Av": nil,
+        "Cheshvan": "Chesh",
+        "Elul": nil,
+        "Iyyar": "Iyar",
+        "Kislev": nil,
+        "Nisan": nil,
+        "Sh'vat": "Shvat",
+        "Sivan": nil,
+        "Tamuz": nil,
+        "Tevet": nil,
+        "Tishrei": "Tishr",
+        // ashk
+        "Teves": nil,
+    ]
+
+    // Tighter abbreviations used by the extra-large equivalent
+    // (now: same fallback when even the short form is too wide).
+    static let monthTiny: [String: String] = [
+        "Adar": "Adar",
+        "Adar I": "Ad 1",
+        "Adar II": "Ad 2",
+        "Av": "Av",
+        "Cheshvan": "Chsh",
+        "Elul": "Elul",
+        "Iyyar": "Iyar",
+        "Kislev": "Kis",
+        "Nisan": "Nis",
+        "Sh'vat": "Shvt",
+        "Sivan": "Siv",
+        "Tamuz": "Tam",
+        "Tevet": "Tev",
+        "Tishrei": "Tish",
+        // ashk
+        "Teves": "Tev",
+    ]
+
+    static let parshaHyphenation: [String: [String]?] = [
+        "Achrei Mot": nil,
+        "Balak": nil,
+        "Bamidbar": ["Bamid", "bar"],
+        "Bechukotai": ["Bechu", "kotai"],
+        "Beha'alotcha": ["Behaa", "lotcha"],
+        "Behar": nil,
+        "Bereshit": ["Bere-", "sheet"],
+        "Beshalach": ["Besha", "lach"],
+        "Bo": nil,
+        "Chayei Sara": nil,
+        "Chukat": nil,
+        "Devarim": ["Deva-", "rim"],
+        "Eikev": nil,
+        "Emor": nil,
+        "Ha'azinu": ["Ha’", "azinu"],
+        "Kedoshim": ["Kedo-", "shim"],
+        "Ki Tavo": nil,
+        "Ki Teitzei": nil,
+        "Ki Tisa": nil,
+        "Korach": nil,
+        "Lech-Lecha": nil,
+        "Masei": nil,
+        "Matot": nil,
+        "Metzora": ["Metz-", "ora"],
+        "Miketz": ["Mi-", "ketz"],
+        "Mishpatim": ["Mish-", "patim"],
+        "Nasso": nil,
+        "Nitzavim": ["Nitz-", "avim"],
+        "Noach": nil,
+        "Pekudei": ["Peku-", "dei"],
+        "Pinchas": ["Pin-", "chas"],
+        "Re'eh": nil,
+        "Sh'lach": ["Sh’", "lach"],
+        "Shemot": nil,
+        "Shmini": nil,
+        "Shoftim": ["Shof-", "tim"],
+        "Tazria": nil,
+        "Terumah": ["Teru-", "mah"],
+        "Tetzaveh": ["Tet-", "zaveh"],
+        "Toldot": ["Tol-", "dot"],
+        "Tzav": nil,
+        "Vaera": nil,
+        "Vaetchanan": ["Vaet-", "chanan"],
+        "Vayakhel": ["Vaya-", "khel"],
+        "Vayechi": nil,
+        "Vayeilech": ["Vayei", "lech"],
+        "Vayera": nil,
+        "Vayeshev": ["Vaye-", "shev"],
+        "Vayetzei": ["Vaye-", "tzei"],
+        "Vayigash": ["Vayi-", "gash"],
+        "Vayikra": ["Vayi-", "kra"],
+        "Vayishlach": ["Vayish", "lach"],
+        "Yitro": nil,
+        // ashk
+        "Bechukosai": ["Bechu", "kosai"],
+        "Beha'aloscha": ["Behaa", "loscha"],
+        "Bereshis": ["Bere-", "shis"],
+        "Chukas": nil,
+        "Shemos": nil,
+        "Toldos": ["Tol-", "dos"],
+        "Vaeschanan": ["Vaes-", "chanan"],
+        "Yisro": nil,
+    ]
+
+    private static let splitDelimiters: [Character] = ["-", "־", " "] // dash, maqaf, space
+
+    /// Splits a parsha (or holiday) name into one or two lines for stacked
+    /// layouts: at the first dash, maqaf or space if there is one, otherwise
+    /// at the hyphenation point in `parshaHyphenation`.
+    static func splitParsha(_ parsha: String) -> [String] {
+        for delim in splitDelimiters {
+            if let idx = parsha.firstIndex(of: delim) {
+                return [String(parsha[..<idx]), String(parsha[parsha.index(after: idx)...])]
+            }
+        }
+        if let pair = parshaHyphenation[tableKey(parsha)] ?? nil {
+            return pair
+        }
+        return [parsha]
+    }
+}

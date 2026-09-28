@@ -9,14 +9,12 @@
 /* Begin PBXBuildFile section */
 		9D2E6CF92705F8CC002EC757 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9D2E6CFB2705F8CC002EC757 /* Localizable.strings */; };
 		9D2E6D0527061957002EC757 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9D2E6CFB2705F8CC002EC757 /* Localizable.strings */; };
-		9D35F47F26E57B3200EC5AAD /* DateItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D35F47E26E57B3200EC5AAD /* DateItem.swift */; };
 		9D35F48126E5809100EC5AAD /* HDateList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D35F48026E5809100EC5AAD /* HDateList.swift */; };
 		9D35F48326E6698400EC5AAD /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D35F48226E6698400EC5AAD /* SettingsView.swift */; };
 		9D9A027226CC6A420055160C /* HebcalHDate WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 9D9A027126CC6A420055160C /* HebcalHDate WatchKit App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9D9A027726CC6A460055160C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D9A027626CC6A460055160C /* Assets.xcassets */; };
 		9D9A028326CC6A460055160C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9A028226CC6A460055160C /* ContentView.swift */; };
 		9D9A028526CC6A460055160C /* HebcalHDateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D9A028426CC6A460055160C /* HebcalHDateApp.swift */; };
-		9D9A028926CC6A480055160C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D9A028826CC6A480055160C /* Assets.xcassets */; };
 		9DA5666626EEBFF10074F100 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DA5666526EEBFF10074F100 /* ExtensionDelegate.swift */; };
 		9DC2BBE426D421A300A248EB /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC2BBE326D421A300A248EB /* ModelData.swift */; };
 		9DC90C5A277B9A470022537C /* Hebcal in Frameworks */ = {isa = PBXBuildFile; productRef = 9DC90C59277B9A470022537C /* Hebcal */; };
@@ -24,13 +22,12 @@
 		D000000000000000000000B1 /* HebcalWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D000000000000000000000A2 /* HebcalWidgetBundle.swift */; };
 		D000000000000000000000B2 /* HebcalProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D000000000000000000000A3 /* HebcalProvider.swift */; };
 		D000000000000000000000B3 /* HebcalWidgetViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D000000000000000000000A4 /* HebcalWidgetViews.swift */; };
-		D000000000000000000000B4 /* WidgetTextHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D000000000000000000000A5 /* WidgetTextHelpers.swift */; };
-		D000000000000000000000B5 /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DC2BBE326D421A300A248EB /* ModelData.swift */; };
-		D000000000000000000000B6 /* DateItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D35F47E26E57B3200EC5AAD /* DateItem.swift */; };
 		D000000000000000000000B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D000000000000000000000A7 /* Assets.xcassets */; };
 		D000000000000000000000B8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9D2E6CFB2705F8CC002EC757 /* Localizable.strings */; };
 		D000000000000000000000B9 /* Hebcal in Frameworks */ = {isa = PBXBuildFile; productRef = D000000000000000000000F2 /* Hebcal */; };
 		D000000000000000000000BA /* HebcalHDate Widgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D000000000000000000000A1 /* HebcalHDate Widgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D00000000000000000000103 /* HebcalWatchCore in Frameworks */ = {isa = PBXBuildFile; productRef = D00000000000000000000101 /* HebcalWatchCore */; };
+		D00000000000000000000104 /* HebcalWatchCore in Frameworks */ = {isa = PBXBuildFile; productRef = D00000000000000000000102 /* HebcalWatchCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,7 +78,6 @@
 		9D2E6CFD2705F8D6002EC757 /* en-IN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-IN"; path = "en-IN.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9D2E6CFE2705F8D6002EC757 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		9D2E6CFF2705F920002EC757 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
-		9D35F47E26E57B3200EC5AAD /* DateItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateItem.swift; sourceTree = "<group>"; };
 		9D35F48026E5809100EC5AAD /* HDateList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDateList.swift; sourceTree = "<group>"; };
 		9D35F48226E6698400EC5AAD /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		9D9A026D26CC6A410055160C /* HebcalHDate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HebcalHDate.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,7 +86,6 @@
 		9D9A027826CC6A460055160C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D9A028226CC6A460055160C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9D9A028426CC6A460055160C /* HebcalHDateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HebcalHDateApp.swift; sourceTree = "<group>"; };
-		9D9A028826CC6A480055160C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9D9A028B26CC6A480055160C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9DA5666526EEBFF10074F100 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		9DC2BBE326D421A300A248EB /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
@@ -99,11 +94,11 @@
 		D000000000000000000000A2 /* HebcalWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HebcalWidgetBundle.swift; sourceTree = "<group>"; };
 		D000000000000000000000A3 /* HebcalProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HebcalProvider.swift; sourceTree = "<group>"; };
 		D000000000000000000000A4 /* HebcalWidgetViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HebcalWidgetViews.swift; sourceTree = "<group>"; };
-		D000000000000000000000A5 /* WidgetTextHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTextHelpers.swift; sourceTree = "<group>"; };
 		D000000000000000000000A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D000000000000000000000A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D000000000000000000000A8 /* HebcalHDate_Widgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HebcalHDate_Widgets.entitlements; sourceTree = "<group>"; };
-		D000000000000000000000A9 /* HebcalHDate_WatchKit_Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HebcalHDate_WatchKit_Extension.entitlements; sourceTree = "<group>"; };
+		D00000000000000000000100 /* HebcalWatchCore */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HebcalWatchCore; sourceTree = "<group>"; };
+		D000000000000000000000A9 /* HebcalHDate_WatchKit_App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HebcalHDate_WatchKit_App.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +107,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DC90C5A277B9A470022537C /* Hebcal in Frameworks */,
+				D00000000000000000000103 /* HebcalWatchCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +116,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D000000000000000000000B9 /* Hebcal in Frameworks */,
+				D00000000000000000000104 /* HebcalWatchCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,8 +127,8 @@
 			isa = PBXGroup;
 			children = (
 				9D9A027526CC6A420055160C /* HebcalHDate WatchKit App */,
-				9D9A028126CC6A460055160C /* HebcalHDate WatchKit Extension */,
 				D000000000000000000000F1 /* HebcalHDate Widgets */,
+				D00000000000000000000100 /* HebcalWatchCore */,
 				9D9A026E26CC6A410055160C /* Products */,
 				9DC90C58277B9A470022537C /* Frameworks */,
 			);
@@ -150,29 +147,20 @@
 		9D9A027526CC6A420055160C /* HebcalHDate WatchKit App */ = {
 			isa = PBXGroup;
 			children = (
-				9D9A027626CC6A460055160C /* Assets.xcassets */,
-				9D9A027826CC6A460055160C /* Info.plist */,
-			);
-			path = "HebcalHDate WatchKit App";
-			sourceTree = "<group>";
-		};
-		9D9A028126CC6A460055160C /* HebcalHDate WatchKit Extension */ = {
-			isa = PBXGroup;
-			children = (
-				9D2E6CFB2705F8CC002EC757 /* Localizable.strings */,
+				9D9A028426CC6A460055160C /* HebcalHDateApp.swift */,
+				9DA5666526EEBFF10074F100 /* ExtensionDelegate.swift */,
+				9DC2BBE326D421A300A248EB /* ModelData.swift */,
 				9D9A028226CC6A460055160C /* ContentView.swift */,
-				9D35F48226E6698400EC5AAD /* SettingsView.swift */,
 				9DE0D4BB2703936B00486082 /* TodayView.swift */,
 				9D35F48026E5809100EC5AAD /* HDateList.swift */,
-				9D35F47E26E57B3200EC5AAD /* DateItem.swift */,
-				9DC2BBE326D421A300A248EB /* ModelData.swift */,
-				9D9A028426CC6A460055160C /* HebcalHDateApp.swift */,
-				9D9A028826CC6A480055160C /* Assets.xcassets */,
-				D000000000000000000000A9 /* HebcalHDate_WatchKit_Extension.entitlements */,
-				9DA5666526EEBFF10074F100 /* ExtensionDelegate.swift */,
+				9D35F48226E6698400EC5AAD /* SettingsView.swift */,
+				9D9A027626CC6A460055160C /* Assets.xcassets */,
+				9D2E6CFB2705F8CC002EC757 /* Localizable.strings */,
+				9D9A027826CC6A460055160C /* Info.plist */,
+				D000000000000000000000A9 /* HebcalHDate_WatchKit_App.entitlements */,
 				9D9A028A26CC6A480055160C /* Preview Content */,
 			);
-			path = "HebcalHDate WatchKit Extension";
+			path = "HebcalHDate WatchKit App";
 			sourceTree = "<group>";
 		};
 		9D9A028A26CC6A480055160C /* Preview Content */ = {
@@ -196,7 +184,6 @@
 				D000000000000000000000A2 /* HebcalWidgetBundle.swift */,
 				D000000000000000000000A3 /* HebcalProvider.swift */,
 				D000000000000000000000A4 /* HebcalWidgetViews.swift */,
-				D000000000000000000000A5 /* WidgetTextHelpers.swift */,
 				D000000000000000000000A7 /* Assets.xcassets */,
 				D000000000000000000000A6 /* Info.plist */,
 				D000000000000000000000A8 /* HebcalHDate_Widgets.entitlements */,
@@ -220,9 +207,6 @@
 				9D9A027426CC6A420055160C /* PBXTargetDependency */,
 			);
 			name = HebcalHDate;
-			packageProductDependencies = (
-				9DC90C57277B97B80022537C /* Hebcal */,
-			);
 			productName = HebcalHDate;
 			productReference = 9D9A026D26CC6A410055160C /* HebcalHDate.app */;
 			productType = "com.apple.product-type.application.watchapp2-container";
@@ -242,6 +226,10 @@
 				D000000000000000000000E2 /* PBXTargetDependency */,
 			);
 			name = "HebcalHDate WatchKit App";
+			packageProductDependencies = (
+				9DC90C59277B9A470022537C /* Hebcal */,
+				D00000000000000000000101 /* HebcalWatchCore */,
+			);
 			productName = "HebcalHDate WatchKit App";
 			productReference = 9D9A027126CC6A420055160C /* HebcalHDate WatchKit App.app */;
 			productType = "com.apple.product-type.application";
@@ -261,6 +249,7 @@
 			name = "HebcalHDate Widgets";
 			packageProductDependencies = (
 				D000000000000000000000F2 /* Hebcal */,
+				D00000000000000000000102 /* HebcalWatchCore */,
 			);
 			productName = "HebcalHDate Widgets";
 			productReference = D000000000000000000000A1 /* HebcalHDate Widgets.appex */;
@@ -326,7 +315,6 @@
 			files = (
 				9D9A027726CC6A460055160C /* Assets.xcassets in Resources */,
 				9D2E6D0527061957002EC757 /* Localizable.strings in Resources */,
-				9D9A028926CC6A480055160C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,7 +341,6 @@
 				9D35F48126E5809100EC5AAD /* HDateList.swift in Sources */,
 				9D9A028526CC6A460055160C /* HebcalHDateApp.swift in Sources */,
 				9DE0D4BC2703936B00486082 /* TodayView.swift in Sources */,
-				9D35F47F26E57B3200EC5AAD /* DateItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,9 +351,6 @@
 				D000000000000000000000B1 /* HebcalWidgetBundle.swift in Sources */,
 				D000000000000000000000B2 /* HebcalProvider.swift in Sources */,
 				D000000000000000000000B3 /* HebcalWidgetViews.swift in Sources */,
-				D000000000000000000000B4 /* WidgetTextHelpers.swift in Sources */,
-				D000000000000000000000B5 /* ModelData.swift in Sources */,
-				D000000000000000000000B6 /* DateItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -532,10 +516,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "HebcalHDate WatchKit Extension/HebcalHDate_WatchKit_Extension.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "HebcalHDate WatchKit App/HebcalHDate_WatchKit_App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 20260924;
-				DEVELOPMENT_ASSET_PATHS = "\"HebcalHDate WatchKit Extension/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"HebcalHDate WatchKit App/Preview Content\"";
 				INFOPLIST_FILE = "HebcalHDate WatchKit App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -558,10 +542,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "HebcalHDate WatchKit Extension/HebcalHDate_WatchKit_Extension.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "HebcalHDate WatchKit App/HebcalHDate_WatchKit_App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 20260924;
-				DEVELOPMENT_ASSET_PATHS = "\"HebcalHDate WatchKit Extension/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"HebcalHDate WatchKit App/Preview Content\"";
 				INFOPLIST_FILE = "HebcalHDate WatchKit App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -716,11 +700,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9DC90C57277B97B80022537C /* Hebcal */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9DC90C56277B97B80022537C /* XCRemoteSwiftPackageReference "hebcal-swift" */;
-			productName = Hebcal;
-		};
 		9DC90C59277B9A470022537C /* Hebcal */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9DC90C56277B97B80022537C /* XCRemoteSwiftPackageReference "hebcal-swift" */;
@@ -730,6 +709,14 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9DC90C56277B97B80022537C /* XCRemoteSwiftPackageReference "hebcal-swift" */;
 			productName = Hebcal;
+		};
+		D00000000000000000000101 /* HebcalWatchCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HebcalWatchCore;
+		};
+		D00000000000000000000102 /* HebcalWatchCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HebcalWatchCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
