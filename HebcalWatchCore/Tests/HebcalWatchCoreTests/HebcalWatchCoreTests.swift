@@ -499,6 +499,13 @@ extension HebcalWatchCoreTests {
             #expect(item.holidaysShort == ["R.Ch. Cheshvan"])
         }
 
+        @Test func dateItemDoesNotAbbreviateChanukah() {
+            let item = formatter().dateItem(for: date(2026, 12, 7), calendar: calendar,
+                                            now: date(2026, 12, 7), showYear: false, forceParsha: false)
+            #expect(item.holidays == ["Chanukah: 4 Candles"])
+            #expect(item.holidaysShort == item.holidays)
+        }
+
         @Test func omerFridayLinksToOmer() throws {
             let item = zmanimFormatter().dateItem(for: date(2027, 4, 23), calendar: calendar,
                                                   now: date(2027, 4, 23), showYear: false, forceParsha: false)

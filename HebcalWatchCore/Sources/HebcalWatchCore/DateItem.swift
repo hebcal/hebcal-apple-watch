@@ -131,7 +131,9 @@ extension HebcalFormatter {
                 zman.kind != .chanukah || !zmanim.contains { $0.kind != .chanukah && $0.time == zman.time }
             },
             detail: zmanimDetail.map(DateItemDetail.zmanim) ?? omerDetail(on: hdate).map(DateItemDetail.omer),
-            holidaysShort: events.map { holidayName($0, abbreviated: true) }
+            // Chanukah's complication abbreviations are emoji ("🕎 Day 3️⃣");
+            // in the app the full name reads better, wrapped if need be.
+            holidaysShort: events.map { holidayName($0, abbreviated: !$0.desc.hasPrefix("Chanukah")) }
         )
     }
 
