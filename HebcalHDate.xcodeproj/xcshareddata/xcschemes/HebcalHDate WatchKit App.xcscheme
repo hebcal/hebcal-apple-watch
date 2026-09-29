@@ -67,6 +67,10 @@
             argument = "-FakeDate 2027-05-10T12:00"
             isEnabled = "NO">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-FakeDate 2026-12-04T12:34"
+            isEnabled = "YES">
+         </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
