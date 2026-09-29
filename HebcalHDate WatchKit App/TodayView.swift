@@ -51,20 +51,31 @@ struct TodayView: View {
                     .foregroundColor(.white)
                     .font(.system(size: largeFontSize, weight: .regular, design: .default))
                     .lineLimit(1)
-                // The full name if it fits on one line, else the abbreviated
-                // one ("R.Ch. Cheshvan"), else the abbreviated one wrapped.
+                // A name of up to 19 characters ("Chanukah: 8 Candles") stays
+                // on one line, shrunk by minimumScaleFactor if need be.
+                // Longer ones: the full name if it fits on one line, else the
+                // abbreviated one ("R.Ch. Cheshvan"), else the abbreviated one
+                // wrapped. (ViewThatFits measures at full size, ignoring
+                // minimumScaleFactor, so it can't make the first choice.)
                 ForEach(item.holidays.indices, id: \.self) { i in
                     let holiday = item.holidays[i]
                     let short = item.holidaysShort[i]
-                    ViewThatFits(in: .horizontal) {
-                        Text(holiday)
-                            .lineLimit(1)
-                        if short != holiday {
-                            Text(short)
+                    Group {
+                        if holiday.count <= 19 {
+                            Text(holiday)
                                 .lineLimit(1)
+                        } else {
+                            ViewThatFits(in: .horizontal) {
+                                Text(holiday)
+                                    .lineLimit(1)
+                                if short != holiday {
+                                    Text(short)
+                                        .lineLimit(1)
+                                }
+                                Text(short)
+                                    .lineLimit(2)
+                            }
                         }
-                        Text(short)
-                            .lineLimit(2)
                     }
                     .foregroundColor(.yellow)
                     .font(.system(size: largeFontSize, weight: .regular, design: .default))
