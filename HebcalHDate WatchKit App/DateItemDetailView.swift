@@ -150,10 +150,8 @@ struct OmerDetailView: View {
 #Preview("Zmanim") {
     let settings = HebcalSettings(useLocation: true, location: GeoPoint(
         latitude: 40.71, longitude: -74.01, timeZoneIdentifier: TimeZone.current.identifier))
-    NavigationStack {
-        ZmanimDetailView(zmanim: HebcalFormatter(settings: settings)
-            .zmanimDetail(on: HDate(yy: 5787, mm: .KISLEV, dd: 24), calendar: .current)!)
-    }
+    ZmanimDetailView(zmanim: HebcalFormatter(settings: settings)
+        .zmanimDetail(on: HDate(yy: 5787, mm: .KISLEV, dd: 24), calendar: .current)!)
 }
 
 #Preview("English") {
