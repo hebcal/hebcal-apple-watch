@@ -31,6 +31,7 @@
 		D00000000000000000000201 /* DateItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000200 /* DateItemDetailView.swift */; };
 		D00000000000000000000211 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000210 /* LocationManager.swift */; };
 		D00000000000000000000221 /* ZmanimSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000220 /* ZmanimSettingsView.swift */; };
+		D00000000000000000000301 /* SBL_Hbrw.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D00000000000000000000311 /* SBL_Hbrw.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +106,7 @@
 		D00000000000000000000200 /* DateItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateItemDetailView.swift; sourceTree = "<group>"; };
 		D00000000000000000000210 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		D00000000000000000000220 /* ZmanimSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZmanimSettingsView.swift; sourceTree = "<group>"; };
+		D00000000000000000000311 /* SBL_Hbrw.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SBL_Hbrw.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,6 +131,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D00000000000000000000320 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				D00000000000000000000311 /* SBL_Hbrw.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
 		9D9A026626CC6A410055160C = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +174,7 @@
 				9D35F48226E6698400EC5AAD /* SettingsView.swift */,
 				D00000000000000000000220 /* ZmanimSettingsView.swift */,
 				9D9A027626CC6A460055160C /* Assets.xcassets */,
+				D00000000000000000000320 /* Fonts */,
 				9D2E6CFB2705F8CC002EC757 /* Localizable.strings */,
 				9D9A027826CC6A460055160C /* Info.plist */,
 				D000000000000000000000A9 /* HebcalHDate_WatchKit_App.entitlements */,
@@ -324,6 +335,7 @@
 			files = (
 				9D9A027726CC6A460055160C /* Assets.xcassets in Resources */,
 				9D2E6D0527061957002EC757 /* Localizable.strings in Resources */,
+				D00000000000000000000301 /* SBL_Hbrw.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

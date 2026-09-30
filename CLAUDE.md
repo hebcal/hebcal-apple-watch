@@ -87,6 +87,7 @@ ClockKit is otherwise gone; it survives only as the `CLKComplicationWidgetMigrat
 ## Conventions worth knowing
 
 - `TranslationLang` enum from the Hebcal package has cases `.en` (Sephardic), `.ashkenazi`, `.he`, `.heNikud`. UI exposes the first three; `.heNikud` (vowel points) is currently unused by the app. It's persisted as its `Int` raw value under the key `lang`.
+- SBL Hebrew (`Fonts/SBL_Hbrw.ttf`, PostScript name `SBLHebrew`, free for non-commercial use from Tiro Typeworks / the Society of Biblical Literature) is bundled in the **watch app target only** (`UIAppFonts` in its Info.plist) and used only by `OmerDetailView` (the Omer card) for its Hebrew text; `TodayView` and the rest of the app use the system font. Widgets are a separate process and do not get it; don't add it there without a design decision. Its license allows free redistribution only if the file is **unmodified** (the license text lives in the font's own name table) — don't subset, convert or otherwise alter it. It replaced Adobe Hebrew, which needed a paid license.
 - Hebrew (`lang == .he`) renders right-aligned — many views branch on `isHebrew` to flip alignment / insert `Spacer`s.
 - Holiday abbreviations (`Abbreviations.holiday`) and Chanukah emoji renderings are tuned for narrow complication families; changing them affects what shows on the watch face (and the golden files).
 - Dynamic Type scaling for fixed point sizes uses SwiftUI's built-in `@ScaledMetric` property wrapper (e.g. `TodayView`'s `smallFontSize`/`largeFontSize`), not a custom `UIFontMetrics` wrapper.

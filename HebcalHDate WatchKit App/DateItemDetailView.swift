@@ -98,21 +98,43 @@ struct OmerDetailView: View {
         hebrew ? .trailing : .leading
     }
 
+    /// SBL Hebrew (bundled with the watch app only, not the widgets) for
+    /// Hebrew text, a third larger than the system text style it stands in for,
+    /// since it looks small at the same point size.
+    private func font(_ style: Font.TextStyle, _ uiStyle: UIFont.TextStyle,
+                      hebrew: Bool) -> Font {
+        hebrew ? .custom("SBLHebrew", fixedSize: hebrewSize(uiStyle))
+               : .system(style)
+    }
+
+    private func hebrewSize(_ uiStyle: UIFont.TextStyle) -> CGFloat {
+        UIFont.preferredFont(forTextStyle: uiStyle).pointSize * 4 / 3
+    }
+
+    /// Extra space between SBL Hebrew lines (and below the last one), so the
+    /// vowel points under one line don't touch the letters of the next.
+    private func hebrewLeading(_ uiStyle: UIFont.TextStyle, hebrew: Bool) -> CGFloat {
+        hebrew ? (hebrewSize(uiStyle) * 0.15).rounded() : 0
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
                 Text(omer.title)
-                    .font(.headline)
+                    .font(font(.headline, .headline, hebrew: omer.isHebrew))
                     .foregroundColor(.yellow)
                     .frame(maxWidth: .infinity, alignment: alignment(hebrew: omer.isHebrew))
                 ForEach(omer.sections, id: \.self) { section in
                     VStack(alignment: .leading, spacing: 2) {
                         Text(section.heading)
-                            .font(.footnote)
+                            .font(font(.footnote, .footnote, hebrew: omer.isHebrew))
                             .foregroundColor(.secondary)
                             .frame(maxWidth: .infinity, alignment: alignment(hebrew: omer.isHebrew))
                         ForEach(section.lines, id: \.self) { line in
                             Text(line.text)
+                                .font(font(.body, .body, hebrew: line.isHebrew))
+                                .lineSpacing(hebrewLeading(.body, hebrew: line.isHebrew))
+                                .padding(.bottom, hebrewLeading(.body, hebrew: line.isHebrew))
                                 .italic(line.isTransliteration)
                                 .multilineTextAlignment(line.isHebrew ? .trailing : .leading)
                                 .frame(maxWidth: .infinity, alignment: alignment(hebrew: line.isHebrew))

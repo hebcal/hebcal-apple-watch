@@ -22,6 +22,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Hebcal uses your location to calculate sunset, candle-lighting and Havdalah times. Your location stays on your watch.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>SBL_Hbrw.ttf</string>
+	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

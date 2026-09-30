@@ -31,3 +31,7 @@ There are two ways to get the watch app:
 [![Download on the App Store](assets/download-app-store.jpg)](https://apps.apple.com/us/app/hebcal-hebrew-calendar/id1582733315)
 
 Hebcal (pronounced HEEB-kal, as in **Heb**rew **cal**endar) provides Jewish calendar and holiday information. Our mission is to increase awareness of Jewish holidays and to help Jews to be observant of the _mitzvot_.
+
+## Credits
+
+The watch app uses the SBL Hebrew font by Tiro Typeworks, © 2003 & 2007 John Hudson, Tiro Typeworks, which is licensed under the [SBL Font End User License Agreement](https://www.sbl-site.org/wp-content/uploads/2024/05/SBL_Font_End_User_License_Agreement.pdf).
