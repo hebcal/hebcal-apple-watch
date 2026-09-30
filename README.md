@@ -1,12 +1,20 @@
 # Hebcal for Apple Watch
 
-Hebcal Hebrew Calendar provides watch face complications with today’s Hebrew date and this week’s Torah portion. The watch app displays Hebrew/Gregorian dates for the next two weeks, followed by Shabbatot and Jewish holidays for the next four months. No frills, no gimmicks, no notifications, just an easy way to glance at the date and parsha.
+Hebcal Hebrew Calendar provides watch face complications with today’s Hebrew date and this week’s Torah portion. The watch app displays Hebrew/Gregorian dates for the next two weeks, followed by Shabbatot and Jewish holidays for the next year. No frills, no gimmicks, no notifications, just an easy way to glance at the date and parsha.
 
 ![Screenshots of Hebcal Hebrew Calendar app for Apple Watch®](assets/hebcal-apple-watch-screens-1024x306.png)
 
 The Hebrew date and weekly Torah portion can be displayed as transliterations in Sephardic (e.g. “Shabbat” or “Sukkot”) or Ashkenazi (e.g. “Shabbos” or “Sukkos”) or in Hebrew (e.g. “שַׁבָּת” or “סוּכּוֹת”). Select Israel from the settings if you are based in Israel and want to see the Israeli Jewish holiday & Torah reading schedule. The default setting is for [Diaspora](https://www.hebcal.com/home/51/what-is-the-differerence-between-the-diaspora-and-israeli-sedra-schemes) (outside of Israel).
 
 Because Hebrew days begin at sundown, the app rolls over to the next Hebrew date after 8 PM local time. You can also turn on Daf Yomi in the settings to see the day’s page of Talmud.
+
+## Sunset and candle-lighting times (optional)
+
+Turn on **Use Location** in Settings and the Hebrew date rolls over at sunset instead of 8 PM. Friday and holiday candle-lighting times, Havdalah, and Chanukah candles then appear in the app and on the watch face. You can adjust the candle-lighting minutes and the Havdalah setting in Settings. Tap a day with candle times to see the details on a Zmanim card, shown under the day’s Gregorian date. Your location stays on the watch and is used only for these calculations.
+
+## Omer
+
+During the Omer, tap the day to see the Omer card: the count, the Sefirah, the word and letter of Psalm 67, and Ana BeKoach.
 
 ## Complications
 
