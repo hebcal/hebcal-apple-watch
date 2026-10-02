@@ -56,7 +56,7 @@ public struct HebcalEntry {
     public let richHeaderAbbrev: String    // "26 Tishr" (Abbreviations.month)
     public let omerToday: String?
     // The next candle-lighting / Havdalah / Chanukah time of the current
-    // Hebrew day (with a location only), for the rectangular widget.
+    // civil day (with a location only), for the rectangular widget.
     // Several when they coincide: Chanukah and Shabbat candles on Friday.
     public let zmanim: [ZmanEvent]
 
@@ -154,17 +154,16 @@ extension HebcalEntry {
     }
 
     /// The candle times to show at `date`, when the Hebrew date is `hdate`:
-    /// today's until they pass, except that candle lighting stays up until
-    /// sunset; after sunset, tomorrow's (so Friday night shows Havdalah).
+    /// today's (civil day) until they pass, except that candle lighting
+    /// stays up until sunset. Never tomorrow's, even after sunset: Thursday
+    /// night doesn't show Friday's candles, nor Friday night Saturday's
+    /// Havdalah, until midnight.
     static func upcomingZmanim(at date: Date, hdate: HDate, formatter: HebcalFormatter,
                                calendar: Calendar) -> [ZmanEvent] {
         let today = HDate(date: date, calendar: calendar)
         let afterSunset = hdate.abs() != today.abs()
-        var candidates = formatter.candleTimes(on: today, calendar: calendar)
-            .filter { $0.time > date || !afterSunset }
-        if afterSunset {
-            candidates += formatter.candleTimes(on: today.next(), calendar: calendar)
-        }
+        let candidates = formatter.candleTimes(on: today, calendar: calendar)
+            .filter { ($0.time > date || !afterSunset) && calendar.isDate($0.time, inSameDayAs: date) }
         guard let first = candidates.first else {
             return []
         }
