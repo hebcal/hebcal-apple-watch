@@ -221,7 +221,7 @@ extension HebcalWatchCoreTests {
             (2026, 12, 25, .en, .parsha("Vayechi")),
             (2027, 3, 22, .en, .twoLines("Erev", "Purim")),
             (2027, 3, 23, .en, .holidayWithEmoji("Purim", "🎭️📜")),
-            (2026, 12, 7, .en, .emojiAbove("🕎", "Day 3️⃣")),
+            (2026, 12, 7, .en, .emojiAbove("🕎", "Day 3")),
             (2026, 12, 7, .he, .twoLines("חנוכה", "3️⃣")),
             (2027, 2, 22, .he, .parsha("כי תשא")),
             (2027, 3, 24, .en, .twoLines("Shushan", "Purim")),
@@ -232,7 +232,7 @@ extension HebcalWatchCoreTests {
 
         @Test(arguments: [
             ("🕎", true), ("🍏🍯", true),
-            ("Day 4️⃣", false), ("4", false), ("חנוכה", false), ("", false),
+            ("Day 4", false), ("4", false), ("חנוכה", false), ("", false),
         ])
         func isEmojiOnly(text: String, expected: Bool) {
             #expect(ParshaCircularLayout.isEmojiOnly(text) == expected)

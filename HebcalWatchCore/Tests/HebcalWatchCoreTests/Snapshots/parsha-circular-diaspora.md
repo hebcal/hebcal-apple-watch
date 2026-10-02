@@ -103,12 +103,12 @@ Legend: `A<br>B` two stacked lines · **bold** holiday name, large, no icon ·
 | Thu 2026-12-03 | 23 Kislev | Vaye-<br>shev | Vaye-<br>shev | וישב 📜 |
 | Fri 2026-12-04 | 24 Kislev | **🕎**<br>1️⃣ 🕯️ | **🕎**<br>1️⃣ 🕯️ | חנוכה<br>א׳ נר |
 | **Sat 2026-12-05** | 25 Kislev | Vaye-<br>shev | Vaye-<br>shev | וישב 📜 |
-| Sun 2026-12-06 | 26 Kislev | **🕎**<br>Day 2️⃣ | **🕎**<br>Day 2️⃣ | חנוכה<br>2️⃣ |
-| Mon 2026-12-07 | 27 Kislev | **🕎**<br>Day 3️⃣ | **🕎**<br>Day 3️⃣ | חנוכה<br>3️⃣ |
-| Tue 2026-12-08 | 28 Kislev | **🕎**<br>Day 4️⃣ | **🕎**<br>Day 4️⃣ | חנוכה<br>4️⃣ |
-| Wed 2026-12-09 | 29 Kislev | **🕎**<br>Day 5️⃣ | **🕎**<br>Day 5️⃣ | חנוכה<br>5️⃣ |
-| Thu 2026-12-10 | 30 Kislev | **🕎**<br>Day 6️⃣ | **🕎**<br>Day 6️⃣ | חנוכה<br>6️⃣ |
-| Fri 2026-12-11 | 1 Tevet | **🕎**<br>Day 7️⃣ | **🕎**<br>Day 7️⃣ | חנוכה<br>7️⃣ |
+| Sun 2026-12-06 | 26 Kislev | **🕎**<br>Day 2 | **🕎**<br>Day 2 | חנוכה<br>2️⃣ |
+| Mon 2026-12-07 | 27 Kislev | **🕎**<br>Day 3 | **🕎**<br>Day 3 | חנוכה<br>3️⃣ |
+| Tue 2026-12-08 | 28 Kislev | **🕎**<br>Day 4 | **🕎**<br>Day 4 | חנוכה<br>4️⃣ |
+| Wed 2026-12-09 | 29 Kislev | **🕎**<br>Day 5 | **🕎**<br>Day 5 | חנוכה<br>5️⃣ |
+| Thu 2026-12-10 | 30 Kislev | **🕎**<br>Day 6 | **🕎**<br>Day 6 | חנוכה<br>6️⃣ |
+| Fri 2026-12-11 | 1 Tevet | **🕎**<br>Day 7 | **🕎**<br>Day 7 | חנוכה<br>7️⃣ |
 | **Sat 2026-12-12** | 2 Tevet | Mi-<br>ketz | Mi-<br>ketz | מקץ 📜 |
 | Sun 2026-12-13 | 3 Tevet | Vayi-<br>gash | Vayi-<br>gash | ויגש 📜 |
 | Mon 2026-12-14 | 4 Tevet | Vayi-<br>gash | Vayi-<br>gash | ויגש 📜 |
