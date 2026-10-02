@@ -149,6 +149,7 @@ extension HebcalWatchCoreTests {
             #expect(detail.title == "28th day of the Omer")
             #expect(detail.nightTitles ==
                     ["Wednesday night, 19 May 2027", "Wednesday night, 19 May", "Wed night, 19 May"])
+            #expect(detail.hebrewDate == "13 Iyyar 5787")
             #expect(detail.shortTitle == "Omer: 28th day")
             #expect(!detail.isHebrew)
             #expect(detail.sections.map(\.heading) == ["Count", "Sefirah"])

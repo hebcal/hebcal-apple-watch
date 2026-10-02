@@ -130,14 +130,22 @@ struct OmerDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
-                ViewThatFits(in: .horizontal) {
-                    ForEach(omer.nightTitles, id: \.self) { title in
-                        Text(title)
-                            .font(.headline)
-                            .foregroundColor(.yellow)
-                            .lineLimit(1)
-                            .frame(maxWidth: .infinity, alignment: alignment(hebrew: omer.isHebrew))
+                VStack(alignment: .leading, spacing: 0) {
+                    ViewThatFits(in: .horizontal) {
+                        ForEach(omer.nightTitles, id: \.self) { title in
+                            Text(title)
+                                .font(.headline)
+                                .foregroundColor(.yellow)
+                                .lineLimit(1)
+                                .frame(maxWidth: .infinity, alignment: alignment(hebrew: omer.isHebrew))
+                        }
                     }
+                    Text(omer.hebrewDate)
+                        .font(.footnote)
+                        .foregroundColor(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .frame(maxWidth: .infinity, alignment: alignment(hebrew: omer.isHebrew))
                 }
                 ForEach(omer.sections, id: \.self) { section in
                     VStack(alignment: .leading, spacing: 2) {
@@ -158,11 +166,11 @@ struct OmerDetailView: View {
                 }
                 // Same left-to-right order in English and Hebrew.
                 HStack {
-                    omerWord(omer.anaBekoachWord)
-                    Spacer()
                     omerWord(omer.lamnatzeachLetter)
                     Spacer()
                     omerWord(omer.lamnatzeachWord)
+                    Spacer()
+                    omerWord(omer.anaBekoachWord)
                 }
                 .environment(\.layoutDirection, .leftToRight)
                 .padding(.top, 4)

@@ -31,6 +31,9 @@ public struct OmerDetail: Hashable, Codable, Sendable {
     /// The card's heading, the evening the count is said: "Wednesday night,
     /// 19 May 2027", then shorter forms for when it doesn't fit.
     public var nightTitles: [String]
+    /// The Hebrew date the count belongs to, shown under the heading:
+    /// "13 Iyyar 5787" / "י״ג אִיָיר תשפ״ז".
+    public var hebrewDate: String
     /// The card is in Hebrew (title and headings right-aligned).
     public var isHebrew: Bool
     public var sections: [Section]
@@ -77,6 +80,7 @@ extension HebcalFormatter {
         }
         return OmerDetail(day: ev.omer, title: ev.render(lang: lang),
                           nightTitles: nightTitles(for: hdate, calendar: calendar),
+                          hebrewDate: dateString(hdate, showYear: true),
                           isHebrew: isHebrew, sections: sections,
                           anaBekoachWord: ev.getAnaBekoachWord(),
                           lamnatzeachLetter: ev.getLamnatzeachLetter(),
