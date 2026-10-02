@@ -31,6 +31,11 @@ public struct OmerDetail: Hashable, Codable, Sendable {
     /// The card is in Hebrew (title and headings right-aligned).
     public var isHebrew: Bool
     public var sections: [Section]
+    /// Today's word from Ana BeKoach, and its letter and word from Psalm 67,
+    /// shown in one untitled row at the bottom of the card.
+    public var anaBekoachWord: String
+    public var lamnatzeachLetter: String
+    public var lamnatzeachWord: String
 
     /// "Omer: 13th day", short enough for one line on a button; the Hebrew
     /// title is already short.
@@ -57,9 +62,6 @@ extension HebcalFormatter {
             sections = [
                 .init(heading: "ספירת העומר", lines: [he(ev.getTodayIs(lang: .heNikud))]),
                 .init(heading: "ספירה", lines: [he(ev.sefira(lang: .he))]),
-                .init(heading: "למנצח", lines: [he(ev.getLamnatzeachWord())]),
-                .init(heading: "ישמחו (תהלים ס״ז:ה׳)", lines: [he(ev.getLamnatzeachLetter())]),
-                .init(heading: "אנא בכח", lines: [he(ev.getAnaBekoachWord())]),
             ]
         } else {
             sections = [
@@ -68,12 +70,12 @@ extension HebcalFormatter {
                 .init(heading: "Sefirah", lines: [he(ev.sefira(lang: .he)),
                                                   translit(ev.sefira(lang: .translit)),
                                                   en(ev.sefira(lang: .en))]),
-                .init(heading: "Psalm 67 word", lines: [he(ev.getLamnatzeachWord())]),
-                .init(heading: "Psalm 67:5 letter", lines: [he(ev.getLamnatzeachLetter())]),
-                .init(heading: "Ana BeKoach", lines: [he(ev.getAnaBekoachWord())]),
             ]
         }
         return OmerDetail(day: ev.omer, title: ev.render(lang: lang),
-                          isHebrew: isHebrew, sections: sections)
+                          isHebrew: isHebrew, sections: sections,
+                          anaBekoachWord: ev.getAnaBekoachWord(),
+                          lamnatzeachLetter: ev.getLamnatzeachLetter(),
+                          lamnatzeachWord: ev.getLamnatzeachWord())
     }
 }

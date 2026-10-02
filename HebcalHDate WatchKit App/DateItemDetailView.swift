@@ -117,6 +117,16 @@ struct OmerDetailView: View {
         hebrew ? (hebrewSize(uiStyle) * 0.15).rounded() : 0
     }
 
+    /// One of the three words in the bottom row, only 15% larger than body
+    /// text, since three have to fit side by side.
+    private func omerWord(_ text: String) -> some View {
+        Text(text)
+            .font(.custom("SBLHebrew",
+                          fixedSize: UIFont.preferredFont(forTextStyle: .body).pointSize * 1.15))
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
@@ -141,6 +151,16 @@ struct OmerDetailView: View {
                         }
                     }
                 }
+                // Same left-to-right order in English and Hebrew.
+                HStack {
+                    omerWord(omer.anaBekoachWord)
+                    Spacer()
+                    omerWord(omer.lamnatzeachLetter)
+                    Spacer()
+                    omerWord(omer.lamnatzeachWord)
+                }
+                .environment(\.layoutDirection, .leftToRight)
+                .padding(.top, 4)
             }
         }
         .navigationTitle("Omer")

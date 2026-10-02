@@ -149,8 +149,10 @@ extension HebcalWatchCoreTests {
             #expect(detail.title == "28th day of the Omer")
             #expect(detail.shortTitle == "Omer: 28th day")
             #expect(!detail.isHebrew)
-            #expect(detail.sections.map(\.heading) ==
-                    ["Count", "Sefirah", "Psalm 67 word", "Psalm 67:5 letter", "Ana BeKoach"])
+            #expect(detail.sections.map(\.heading) == ["Count", "Sefirah"])
+            #expect(!detail.anaBekoachWord.isEmpty)
+            #expect(!detail.lamnatzeachLetter.isEmpty)
+            #expect(!detail.lamnatzeachWord.isEmpty)
             let count = detail.sections[0].lines
             #expect(count.map(\.isHebrew) == [true, false])
             #expect(count[1].text == "Today is 28 days, which are 4 weeks of the Omer")
