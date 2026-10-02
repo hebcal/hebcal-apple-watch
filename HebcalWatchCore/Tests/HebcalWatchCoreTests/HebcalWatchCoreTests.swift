@@ -530,7 +530,7 @@ extension HebcalWatchCoreTests {
             #expect(detail.events.map(\.kind) == [.candleLighting, .chanukah])
         }
 
-        @Test func entryShowsCandlesUntilSunsetThenHavdalah() {
+        @Test func entryShowsOnlyTodaysCandleTimes() {
             let f = zmanimFormatter()
             func kinds(_ d: Int, _ h: Int, _ min: Int = 0) -> [ZmanEvent.Kind] {
                 HebcalEntry(date: date(2026, 11, d, hour: h, minute: min), formatter: f, calendar: calendar)
@@ -538,9 +538,12 @@ extension HebcalWatchCoreTests {
             }
             // Fri Nov 6: candles 4:28 PM, sunset 4:46 PM; Sat Nov 7: sunset 4:45 PM, Havdalah 5:28 PM.
             #expect(kinds(5, 12) == [])                      // Thursday
+            #expect(kinds(5, 20) == [])                      // Thursday night: Friday's candles wait for midnight
+            #expect(kinds(6, 0, 1) == [.candleLighting])
             #expect(kinds(6, 9) == [.candleLighting])
             #expect(kinds(6, 16, 40) == [.candleLighting])   // lit, not yet sunset
-            #expect(kinds(6, 17, 0) == [.havdalah])          // Shabbat has begun
+            #expect(kinds(6, 17, 0) == [])                   // Friday night: Havdalah waits for midnight
+            #expect(kinds(7, 0, 1) == [.havdalah])
             #expect(kinds(7, 17, 0) == [.havdalah])          // after sunset, before Havdalah
             #expect(kinds(7, 18, 0) == [])
         }
