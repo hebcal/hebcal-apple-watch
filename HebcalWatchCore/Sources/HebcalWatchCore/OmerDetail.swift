@@ -28,6 +28,9 @@ public struct OmerDetail: Hashable, Codable, Sendable {
     public var day: Int
     /// "13th day of the Omer" / "י״ג בעומר".
     public var title: String
+    /// The card's heading, the evening the count is said: "Wednesday night,
+    /// 19 May 2027", then shorter forms for when it doesn't fit.
+    public var nightTitles: [String]
     /// The card is in Hebrew (title and headings right-aligned).
     public var isHebrew: Bool
     public var sections: [Section]
@@ -48,7 +51,7 @@ extension HebcalFormatter {
     /// The Omer card for `hdate`, or nil outside the Omer. In English it
     /// pairs the Hebrew count and Sefirah with a translation; in Hebrew it
     /// shows only the Hebrew.
-    public func omerDetail(on hdate: HDate) -> OmerDetail? {
+    public func omerDetail(on hdate: HDate, calendar: Calendar) -> OmerDetail? {
         guard let ev = OmerEvent(hdate: hdate) else {
             return nil
         }
@@ -73,6 +76,7 @@ extension HebcalFormatter {
             ]
         }
         return OmerDetail(day: ev.omer, title: ev.render(lang: lang),
+                          nightTitles: nightTitles(for: hdate, calendar: calendar),
                           isHebrew: isHebrew, sections: sections,
                           anaBekoachWord: ev.getAnaBekoachWord(),
                           lamnatzeachLetter: ev.getLamnatzeachLetter(),

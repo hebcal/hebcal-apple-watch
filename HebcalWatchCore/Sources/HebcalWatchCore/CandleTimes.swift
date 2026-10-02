@@ -258,6 +258,6 @@ extension HebcalFormatter {
                             shortTitle: gregorianTitle(for: noon, calendar: calendar, shortMonth: true),
                             events: events,
                             sunset: sunset(on: noon, calendar: calendar),
-                            omer: omerDetail(on: hdate), isHebrew: isHebrew)
+                            omer: omerDetail(on: hdate, calendar: calendar), isHebrew: isHebrew)
     }
 }

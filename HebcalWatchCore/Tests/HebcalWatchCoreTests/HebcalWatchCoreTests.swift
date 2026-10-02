@@ -142,11 +142,13 @@ extension HebcalWatchCoreTests {
         }
 
         @Test func omerDetail() throws {
-            #expect(formatter().omerDetail(on: HDate(yy: 5787, mm: .NISAN, dd: 15)) == nil)
-            #expect(formatter().omerDetail(on: HDate(yy: 5787, mm: .SIVAN, dd: 6)) == nil)
-            let detail = try #require(formatter().omerDetail(on: HDate(yy: 5787, mm: .IYYAR, dd: 13)))
+            #expect(formatter().omerDetail(on: HDate(yy: 5787, mm: .NISAN, dd: 15), calendar: calendar) == nil)
+            #expect(formatter().omerDetail(on: HDate(yy: 5787, mm: .SIVAN, dd: 6), calendar: calendar) == nil)
+            let detail = try #require(formatter().omerDetail(on: HDate(yy: 5787, mm: .IYYAR, dd: 13), calendar: calendar))
             #expect(detail.day == 28)
             #expect(detail.title == "28th day of the Omer")
+            #expect(detail.nightTitles ==
+                    ["Wednesday night, 19 May 2027", "Wednesday night, 19 May", "Wed night, 19 May"])
             #expect(detail.shortTitle == "Omer: 28th day")
             #expect(!detail.isHebrew)
             #expect(detail.sections.map(\.heading) == ["Count", "Sefirah"])
@@ -163,8 +165,10 @@ extension HebcalWatchCoreTests {
         }
 
         @Test func omerDetailInHebrew() throws {
-            let detail = try #require(formatter(.he).omerDetail(on: HDate(yy: 5787, mm: .NISAN, dd: 16)))
+            let detail = try #require(formatter(.he).omerDetail(on: HDate(yy: 5787, mm: .NISAN, dd: 16), calendar: calendar))
             #expect(detail.title == "א׳ בעומר")
+            #expect(detail.nightTitles ==
+                    ["חמישי בלילה, 22 אפריל 2027", "חמישי בלילה, 22 אפריל", "ה׳ בלילה, 22 אפריל"])
             #expect(detail.isHebrew)
             #expect(detail.sections.allSatisfy { $0.lines.allSatisfy(\.isHebrew) })
         }

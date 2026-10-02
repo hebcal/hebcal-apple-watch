@@ -130,10 +130,15 @@ struct OmerDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 10) {
-                Text(omer.title)
-                    .font(font(.headline, .headline, hebrew: omer.isHebrew))
-                    .foregroundColor(.yellow)
-                    .frame(maxWidth: .infinity, alignment: alignment(hebrew: omer.isHebrew))
+                ViewThatFits(in: .horizontal) {
+                    ForEach(omer.nightTitles, id: \.self) { title in
+                        Text(title)
+                            .font(.headline)
+                            .foregroundColor(.yellow)
+                            .lineLimit(1)
+                            .frame(maxWidth: .infinity, alignment: alignment(hebrew: omer.isHebrew))
+                    }
+                }
                 ForEach(omer.sections, id: \.self) { section in
                     VStack(alignment: .leading, spacing: 2) {
                         Text(section.heading)
@@ -176,10 +181,10 @@ struct OmerDetailView: View {
 
 #Preview("English") {
     OmerDetailView(omer: HebcalFormatter(settings: HebcalSettings(lang: .en))
-        .omerDetail(on: HDate(yy: 5787, mm: .IYYAR, dd: 13))!)
+        .omerDetail(on: HDate(yy: 5787, mm: .IYYAR, dd: 13), calendar: .current)!)
 }
 
 #Preview("Hebrew") {
     OmerDetailView(omer: HebcalFormatter(settings: HebcalSettings(lang: .he))
-        .omerDetail(on: HDate(yy: 5787, mm: .IYYAR, dd: 13))!)
+        .omerDetail(on: HDate(yy: 5787, mm: .IYYAR, dd: 13), calendar: .current)!)
 }

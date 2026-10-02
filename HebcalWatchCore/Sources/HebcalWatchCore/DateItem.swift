@@ -75,6 +75,8 @@ public struct DateItem: Hashable, Codable, Identifiable {
 
 private let dayOfWeek = ["", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 private let dayOfWeekHe = ["", "ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"]
+private let longDayOfWeek = ["", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+private let shortDayOfWeekHe = ["", "א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"]
 private let shortMonth = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun",
                           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 private let shortMonthHe = ["", "ינו", "פבר", "מרץ", "אפר", "מאי", "יונ",
@@ -96,6 +98,21 @@ extension HebcalFormatter {
             ? (abbreviated ? shortMonthHe : longMonthHe)[c.month!]
             : (abbreviated ? shortMonth : longMonth)[c.month!]
         return "\(dow), \(c.day!) \(month)"
+    }
+
+    /// The evening that begins Hebrew date `hdate`, like "Wednesday night,
+    /// 19 May 2027" / "רביעי בלילה, 19 מאי 2027", then shorter forms for
+    /// when it doesn't fit: without the year, then with the weekday
+    /// abbreviated ("Wed night, 19 May" / "ד׳ בלילה, 19 מאי").
+    func nightTitles(for hdate: HDate, calendar: Calendar) -> [String] {
+        let noon = abs2greg(absdate: hdate.abs() - 1, calendar: calendar).addingTimeInterval(12 * 60 * 60)
+        let c = calendar.dateComponents([.weekday, .month, .day, .year], from: noon)
+        let weekday = c.weekday!
+        let dayMonth = "\(c.day!) \(isHebrew ? longMonthHe[c.month!] : longMonth[c.month!])"
+        func night(_ dow: String) -> String { isHebrew ? "\(dow) בלילה" : "\(dow) night" }
+        let full = night(isHebrew ? dayOfWeekHe[weekday] : longDayOfWeek[weekday])
+        let short = night(isHebrew ? shortDayOfWeekHe[weekday] : dayOfWeek[weekday])
+        return ["\(full), \(dayMonth) \(c.year!)", "\(full), \(dayMonth)", "\(short), \(dayMonth)"]
     }
 
     /// The row for Gregorian day `date`. The Gregorian year is shown when
@@ -130,7 +147,7 @@ extension HebcalFormatter {
             zmanim: zmanim.filter { zman in
                 zman.kind != .chanukah || !zmanim.contains { $0.kind != .chanukah && $0.time == zman.time }
             },
-            detail: zmanimDetail.map(DateItemDetail.zmanim) ?? omerDetail(on: hdate).map(DateItemDetail.omer),
+            detail: zmanimDetail.map(DateItemDetail.zmanim) ?? omerDetail(on: hdate, calendar: calendar).map(DateItemDetail.omer),
             // Chanukah's complication abbreviations are emoji ("🕎 Day 3️⃣");
             // in the app the full name reads better, wrapped if need be.
             holidaysShort: events.map { holidayName($0, abbreviated: !$0.desc.hasPrefix("Chanukah")) }
