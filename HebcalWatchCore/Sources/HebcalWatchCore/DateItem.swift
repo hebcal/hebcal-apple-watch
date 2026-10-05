@@ -33,6 +33,11 @@ public struct DateItem: Hashable, Codable, Identifiable {
     public var gregMonth: String
     /// 0 when the year should be omitted (it's the current year).
     public var gregYear: Int
+    /// The Gregorian date, longest first, for when it doesn't fit:
+    /// "Wednesday, 14 October", "Wed, 14 October", "Wed, 14 Oct"
+    /// ("רביעי, 14 אוקטובר", "ד׳, 14 אוקטובר", "ד׳, 14 אוק"), each followed
+    /// by the year unless `gregYear` is 0. No repeats (May has only two).
+    public var gregDates: [String]
     public var hdate: String
     public var parsha: String?
     public var holidays: [String]
@@ -52,13 +57,15 @@ public struct DateItem: Hashable, Codable, Identifiable {
                 gregYear: Int, hdate: String, parsha: String?, holidays: [String],
                 emoji: String?, omer: String?, dafyomi: String?,
                 zmanim: [ZmanEvent] = [], detail: DateItemDetail? = nil,
-                holidaysShort: [String]? = nil) {
+                holidaysShort: [String]? = nil, gregDates: [String]? = nil) {
         self.id = id
         self.lang = lang
         self.dow = dow
         self.gregDay = gregDay
         self.gregMonth = gregMonth
         self.gregYear = gregYear
+        let year = gregYear != 0 ? " \(gregYear)" : ""
+        self.gregDates = gregDates ?? ["\(dow), \(gregDay) \(gregMonth)\(year)"]
         self.hdate = hdate
         self.parsha = parsha
         self.holidays = holidays
@@ -131,13 +138,20 @@ extension HebcalFormatter {
         let currentYear = calendar.component(.year, from: now)
         let zmanimDetail = zmanimDetail(on: hdate, calendar: calendar)
         let zmanim = zmanimDetail?.events ?? []
+        let gregYear = showYear || year != currentYear ? year : 0
+        let yearSuffix = gregYear != 0 ? " \(gregYear)" : ""
+        let day = components.day!
+        let longDow = isHebrew ? dayOfWeekHe[weekday] : longDayOfWeek[weekday]
+        let shortDow = isHebrew ? shortDayOfWeekHe[weekday] : dayOfWeek[weekday]
+        let longMon = isHebrew ? longMonthHe[month] : longMonth[month]
+        let shortMon = isHebrew ? shortMonthHe[month] : shortMonth[month]
         return DateItem(
             id: (hdate.yy * 10000) + (hdate.mm.rawValue * 100) + hdate.dd,
             lang: lang,
             dow: isHebrew ? dayOfWeekHe[weekday] : dayOfWeek[weekday],
-            gregDay: components.day!,
-            gregMonth: isHebrew ? shortMonthHe[month] : shortMonth[month],
-            gregYear: showYear || year != currentYear ? year : 0,
+            gregDay: day,
+            gregMonth: shortMon,
+            gregYear: gregYear,
             hdate: dateString(hdate, showYear: showYear || isRoshHashana),
             parsha: forceParsha || weekday == 7 ? parsha(on: hdate) : nil,
             holidays: events.map { holidayName($0, abbreviated: false) },
@@ -150,7 +164,13 @@ extension HebcalFormatter {
             detail: zmanimDetail.map(DateItemDetail.zmanim) ?? omerDetail(on: hdate, calendar: calendar).map(DateItemDetail.omer),
             // Chanukah's complication abbreviations are emoji ("🕎 Day 3️⃣");
             // in the app the full name reads better, wrapped if need be.
-            holidaysShort: events.map { holidayName($0, abbreviated: !$0.desc.hasPrefix("Chanukah")) }
+            holidaysShort: events.map { holidayName($0, abbreviated: !$0.desc.hasPrefix("Chanukah")) },
+            // "May" is its own abbreviation, so drop repeats.
+            gregDates: [
+                "\(longDow), \(day) \(longMon)\(yearSuffix)",
+                "\(shortDow), \(day) \(longMon)\(yearSuffix)",
+                "\(shortDow), \(day) \(shortMon)\(yearSuffix)",
+            ].reduce(into: []) { if $0.last != $1 { $0.append($1) } }
         )
     }
 

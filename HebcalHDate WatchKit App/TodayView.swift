@@ -16,15 +16,11 @@ struct TodayView: View {
     var showsChevron = false
     /// False when the Omer count is shown elsewhere on screen.
     var showsOmer = true
-    var gregDate: String {
-        var s = item.dow + ", " + String(item.gregDay) + " " + item.gregMonth
-        if item.gregYear != 0 {
-            s += " " + String(item.gregYear)
+    /// `item.gregDates`, longest first, each followed by the emoji.
+    var gregDates: [String] {
+        item.gregDates.map { s in
+            item.emoji.map { s + "  " + $0 } ?? s
         }
-        if let emoji = item.emoji {
-            s += "  " + emoji
-        }
-        return s
     }
     var isHebrew: Bool {
         item.lang == .he
@@ -43,10 +39,16 @@ struct TodayView: View {
                 Spacer()
             }
             VStack(alignment: isHebrew ? .trailing : .leading, spacing:0) {
-                Text(gregDate)
-                    .foregroundColor(.secondary)
-                    .font(.system(size: smallFontSize, weight: .regular, design: .default))
-                    .lineLimit(1)
+                // The longest form that fits; the last one may still be
+                // shrunk by minimumScaleFactor.
+                ViewThatFits(in: .horizontal) {
+                    ForEach(gregDates, id: \.self) { s in
+                        Text(s)
+                            .lineLimit(1)
+                    }
+                }
+                .foregroundColor(.secondary)
+                .font(.system(size: smallFontSize, weight: .regular, design: .default))
                 Text(item.hdate)
                     .foregroundColor(.white)
                     .font(.system(size: largeFontSize, weight: .regular, design: .default))
@@ -152,5 +154,12 @@ struct TodayView: View {
     let date = Calendar.current.date(from: DateComponents(year: 2027, month: 5, day: 10, hour: 12))!
     TodayView(item: HebcalFormatter(settings: HebcalSettings(lang: .en))
         .dateItem(for: date, calendar: .current, now: date, showYear: false, forceParsha: false),
+              showsChevron: true)
+}
+
+#Preview("Hebrew", traits: .fixedLayout(width: 300, height: 150)) {
+    let date = Calendar.current.date(from: DateComponents(year: 2026, month: 10, day: 12, hour: 12))!
+    TodayView(item: HebcalFormatter(settings: HebcalSettings(lang: .he))
+        .dateItem(for: date, calendar: .current, now: date, showYear: true, forceParsha: true),
               showsChevron: true)
 }

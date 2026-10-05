@@ -17,6 +17,7 @@ public struct HebcalEntry {
 
     // Hebrew date pieces (already localized / transliterated for the
     // current user setting).
+    public let isHebrew: Bool              // lang == .he: right-align text
     public let hebDayNumber: String        // "26" or "כ״ו"
     public let hebMonthName: String        // "Iyyar" or "אייר"
     public let hebDateShort: String        // "26 Iyyar"
@@ -127,6 +128,7 @@ extension HebcalEntry {
         }
 
         self.date = date
+        self.isHebrew = formatter.isHebrew
         self.hebDayNumber = dayNum
         self.hebMonthName = monthName
         self.hebDateShort = hebDateShort

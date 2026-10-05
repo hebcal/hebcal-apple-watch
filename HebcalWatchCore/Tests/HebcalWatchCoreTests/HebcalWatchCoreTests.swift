@@ -506,6 +506,19 @@ extension HebcalWatchCoreTests {
             #expect(item.holidaysShort == ["R.Ch. Cheshvan"])
         }
 
+        @Test func dateItemGregorianDates() {
+            let item = formatter().dateItem(for: date(2026, 10, 14), calendar: calendar,
+                                            now: date(2026, 10, 14), showYear: false, forceParsha: false)
+            #expect(item.gregDates == ["Wednesday, 14 October", "Wed, 14 October", "Wed, 14 Oct"])
+            let withYear = formatter(.he).dateItem(for: date(2027, 1, 13), calendar: calendar,
+                                                   now: date(2026, 10, 14), showYear: false, forceParsha: false)
+            #expect(withYear.gregDates == ["רביעי, 13 ינואר 2027", "ד׳, 13 ינואר 2027", "ד׳, 13 ינו 2027"])
+            // Unique, since the app uses them as ForEach ids.
+            let may = formatter().dateItem(for: date(2027, 5, 10), calendar: calendar,
+                                           now: date(2027, 5, 10), showYear: false, forceParsha: false)
+            #expect(may.gregDates == ["Monday, 10 May", "Mon, 10 May"])
+        }
+
         @Test func dateItemDoesNotAbbreviateChanukah() {
             let item = formatter().dateItem(for: date(2026, 12, 7), calendar: calendar,
                                             now: date(2026, 12, 7), showYear: false, forceParsha: false)

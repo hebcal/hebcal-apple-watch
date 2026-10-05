@@ -114,7 +114,7 @@ struct OmerDetailView: View {
     /// Extra space between SBL Hebrew lines (and below the last one), so the
     /// vowel points under one line don't touch the letters of the next.
     private func hebrewLeading(_ uiStyle: UIFont.TextStyle, hebrew: Bool) -> CGFloat {
-        hebrew ? (hebrewSize(uiStyle) * 0.15).rounded() : 0
+        hebrew ? (hebrewSize(uiStyle) * 0.22).rounded() : 0
     }
 
     /// One of the three words in the bottom row, only 15% larger than body
