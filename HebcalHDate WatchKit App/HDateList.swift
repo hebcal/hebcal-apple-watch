@@ -66,7 +66,8 @@ struct MonthSummaryView: View {
                     .foregroundColor(.secondary)
                     .font(.system(size: smallFontSize, weight: .regular, design: .default))
                 if !month.emoji.isEmpty {
-                    Text(verbatim: month.emoji.joined())
+                    // Thin spaces (U+2009): a full space spreads them too far.
+                    Text(verbatim: month.emoji.joined(separator: "\u{2009}"))
                         .font(.system(size: smallFontSize, weight: .regular, design: .default))
                 }
             }
