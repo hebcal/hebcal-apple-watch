@@ -78,6 +78,42 @@ public struct DateItem: Hashable, Codable, Identifiable {
     }
 }
 
+/// The rows of one Gregorian month, shown on a screen of their own.
+public struct DateMonth: Hashable, Codable, Identifiable {
+    /// year * 100 + month, e.g. 202704.
+    public var id: Int
+    /// "April 2027" / "אפריל 2027".
+    public var title: String
+    /// The Hebrew months the whole Gregorian month spans: "Adar II – Nisan
+    /// 5787", or "Elul 5786 – Tishrei 5787" across Rosh Hashana.
+    public var hebrewMonths: String
+    /// The emoji of the month's events in the order they occur, without
+    /// repeats or the generic ✡️.
+    public var emoji: [String]
+    public var items: [DateItem]
+
+    public init(id: Int, title: String, hebrewMonths: String = "",
+                emoji: [String] = [], items: [DateItem]) {
+        self.id = id
+        self.title = title
+        self.hebrewMonths = hebrewMonths
+        self.emoji = emoji
+        self.items = items
+    }
+}
+
+/// The app's calendar: a row per day for the first two weeks, then the
+/// rest of the year a month at a time.
+public struct DateItemList: Hashable, Codable {
+    public var days: [DateItem]
+    public var months: [DateMonth]
+
+    public init(days: [DateItem] = [], months: [DateMonth] = []) {
+        self.days = days
+        self.months = months
+    }
+}
+
 // MARK: - Building date items
 
 private let dayOfWeek = ["", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -174,31 +210,72 @@ extension HebcalFormatter {
         )
     }
 
-    /// The app's scrolling calendar starting at `date`: every day for two
-    /// weeks, then only Shabbatot, holidays and (with a location) other days
-    /// with candle times, i.e. Fridays, through one Hebrew year from today.
-    public func dateItems(from date: Date, calendar: Calendar) -> [DateItem] {
+    /// The app's calendar starting at `date`: every day for two weeks, then
+    /// only Shabbatot, holidays and (with a location) other days with candle
+    /// times, i.e. Fridays, through one Hebrew year from today, grouped by
+    /// Gregorian month.
+    public func dateItemList(from date: Date, calendar: Calendar) -> DateItemList {
         let oneDay = 24.0 * 60.0 * 60.0
-        var items = [dateItem(for: date, calendar: calendar, now: date,
-                              showYear: true, forceParsha: false)]
+        var days = [dateItem(for: date, calendar: calendar, now: date,
+                             showYear: true, forceParsha: false)]
         var current = date.addingTimeInterval(oneDay)
         let twoWeeks = date.addingTimeInterval(14 * oneDay)
         while current < twoWeeks {
-            items.append(dateItem(for: current, calendar: calendar, now: date,
-                                  showYear: false, forceParsha: false))
+            days.append(dateItem(for: current, calendar: calendar, now: date,
+                                 showYear: false, forceParsha: false))
             current = current.addingTimeInterval(oneDay)
         }
+        var months: [DateMonth] = []
         let today = HDate(date: date, calendar: calendar)
         let endAbs = today.abs() + Int64(daysInYear(year: today.yy))
         for abs in greg2abs(date: current)...endAbs {
             let hdate = HDate(absdate: abs)
             let isShabbat = hdate.dow() == .SAT
-            if isShabbat || !holidays(on: hdate).isEmpty
-                || (hdate.dow() == .FRI && zmanimLocation(calendar: calendar) != nil) {
-                items.append(dateItem(for: hdate.greg(), calendar: calendar, now: date,
-                                      showYear: false, forceParsha: isShabbat))
+            guard isShabbat || !holidays(on: hdate).isEmpty
+                || (hdate.dow() == .FRI && zmanimLocation(calendar: calendar) != nil) else {
+                continue
+            }
+            let greg = hdate.greg()
+            let item = dateItem(for: greg, calendar: calendar, now: date,
+                                showYear: false, forceParsha: isShabbat)
+            let c = calendar.dateComponents([.year, .month], from: greg)
+            let id = c.year! * 100 + c.month!
+            if months.last?.id != id {
+                let month = (isHebrew ? longMonthHe : longMonth)[c.month!]
+                months.append(DateMonth(id: id, title: "\(month) \(c.year!)",
+                                        hebrewMonths: hebrewMonths(spanning: greg, calendar: calendar),
+                                        items: []))
+            }
+            months[months.count - 1].items.append(item)
+            // One at a time, since an event can have several ("🍷🫓").
+            for emoji in holidays(on: hdate).compactMap(\.emoji).joined().map(String.init)
+            where emoji != "✡️" && !months[months.count - 1].emoji.contains(emoji) {
+                months[months.count - 1].emoji.append(emoji)
             }
         }
-        return items
+        return DateItemList(days: days, months: months)
+    }
+
+    /// The Hebrew months that the Gregorian month of `date` spans, first
+    /// and last: "Adar II – Nisan 5787", "Elul 5786 – Tishrei 5787", or
+    /// just "Shevat 5787" if it falls within one.
+    func hebrewMonths(spanning date: Date, calendar: Calendar) -> String {
+        let interval = calendar.dateInterval(of: .month, for: date)!
+        let first = HDate(date: interval.start, calendar: calendar)
+        let last = HDate(date: interval.end.addingTimeInterval(-1), calendar: calendar)
+        func name(_ hdate: HDate) -> String { lookupTranslation(str: hdate.monthName(), lang: lang) }
+        if first.yy != last.yy {
+            return "\(name(first)) \(number(first.yy)) – \(name(last)) \(number(last.yy))"
+        }
+        if first.mm == last.mm {
+            return "\(name(first)) \(number(first.yy))"
+        }
+        return "\(name(first)) – \(name(last)) \(number(last.yy))"
+    }
+
+    /// `dateItemList(from:calendar:)` as one list.
+    public func dateItems(from date: Date, calendar: Calendar) -> [DateItem] {
+        let list = dateItemList(from: date, calendar: calendar)
+        return list.days + list.months.flatMap(\.items)
     }
 }

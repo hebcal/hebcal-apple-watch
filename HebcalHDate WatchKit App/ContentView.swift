@@ -14,6 +14,8 @@ import os
 /// `NavigationLink(destination:)` pops right back off.
 enum Screen: Hashable {
     case calendar, settings, zmanim
+    /// One month of the calendar, by `DateMonth.id`.
+    case month(Int)
 }
 
 struct ContentView: View {
@@ -53,7 +55,13 @@ struct ContentView: View {
             .navigationTitle("Hebcal")
             .navigationDestination(for: Screen.self) { screen in
                 switch screen {
-                case .calendar: HDateList()
+                case .calendar:
+                    HDateList(items: modelData.dateItems, months: modelData.dateMonths,
+                              title: Text("Calendar"))
+                case .month(let id):
+                    // Empty if the list was rebuilt and the month has passed.
+                    let month = modelData.dateMonths.first { $0.id == id }
+                    HDateList(items: month?.items ?? [], title: Text(verbatim: month?.title ?? ""))
                 case .settings: SettingsView()
                 case .zmanim: ZmanimSettingsView()
                 }

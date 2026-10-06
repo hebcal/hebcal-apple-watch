@@ -42,7 +42,9 @@ final class ModelData: ObservableObject {
     private var awaitingFirstLocation = false
 
     @Published private(set) var todayDateItem: DateItem
+    /// The calendar list: two weeks of days, then a link per month.
     @Published private(set) var dateItems: [DateItem] = []
+    @Published private(set) var dateMonths: [DateMonth] = []
 
     private var formatter: HebcalFormatter
     /// Start of the day the list was built for; nil forces a rebuild.
@@ -91,8 +93,10 @@ final class ModelData: ObservableObject {
         listDay = today
         todayDateItem = formatter.dateItem(for: now, calendar: calendar, now: now,
                                            showYear: true, forceParsha: true)
-        dateItems = formatter.dateItems(from: now, calendar: calendar)
-        Logger.model.debug("Made \(self.dateItems.count) dateItems")
+        let list = formatter.dateItemList(from: now, calendar: calendar)
+        dateItems = list.days
+        dateMonths = list.months
+        Logger.model.debug("Made \(self.dateItems.count) dateItems and \(self.dateMonths.count) months")
     }
 
     /// The Israel toggle, as set by the user (after which the app no longer

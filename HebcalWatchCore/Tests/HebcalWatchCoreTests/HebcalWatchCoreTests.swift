@@ -202,6 +202,33 @@ extension HebcalWatchCoreTests {
             #expect(items[1].gregYear == 0)                 // later rows in the same year don't
             #expect(Set(items.map(\.id)).count == items.count)
         }
+
+        @Test func dateItemListGroupsByGregorianMonth() {
+            let list = formatter().dateItemList(from: date(2026, 10, 7), calendar: calendar)
+            #expect(list.days.count == 14)
+            // Two weeks from Oct 7 is Oct 21, so October continues as a month.
+            #expect(list.months.first?.title == "October 2026")
+            #expect(list.months.first?.items.first?.gregDay ?? 0 >= 21)
+            #expect(list.months.map(\.id).prefix(4) == [202610, 202611, 202612, 202701])
+            #expect(list.months[3].title == "January 2027")
+            #expect(list.months[3].hebrewMonths == "Tevet – Sh’vat 5787")
+            #expect(list.months[3].emoji == ["🌒", "🌳", "🕍"])
+            // Pesach's 🫓 once, in order of first appearance.
+            #expect(list.months[6].hebrewMonths == "Adar II – Nisan 5787")
+            #expect(list.months[6].emoji == ["🕍", "🌒", "🇮🇱", "🫓", "🍷"])
+            // Across Rosh Hashana; ✡️ (Shmini Atzeret) left out.
+            let last = list.months[list.months.count - 1]
+            #expect(last.hebrewMonths == "Elul 5787 – Tishrei 5788")
+            #expect(!last.emoji.contains("✡️"))
+            // Every row is in its month.
+            for month in list.months {
+                #expect(Set(month.items.map(\.gregMonth)).count == 1)
+            }
+            #expect(Set(list.months.map(\.id)).count == list.months.count)
+            let he = formatter(.he).dateItemList(from: date(2026, 10, 7), calendar: calendar)
+            #expect(he.months[3].title == "ינואר 2027")
+            #expect(he.months[3].hebrewMonths == "טבת – שבט תשפ״ז")
+        }
     }
 }
 
