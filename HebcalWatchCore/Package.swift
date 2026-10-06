@@ -16,9 +16,9 @@ let package = Package(
         .library(name: "HebcalWatchCore", targets: ["HebcalWatchCore"]),
     ],
     dependencies: [
-        // Same URL and branch as the Xcode project's package reference, so
+        // Same URL and version as the Xcode project's package reference, so
         // SwiftPM resolves both to a single copy.
-        .package(url: "https://github.com/hebcal/hebcal-swift.git", branch: "main"),
+        .package(url: "https://github.com/hebcal/hebcal-swift.git", exact: "1.1.0"),
     ],
     targets: [
         .target(
