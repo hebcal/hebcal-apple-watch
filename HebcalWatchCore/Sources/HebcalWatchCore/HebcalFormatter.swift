@@ -106,6 +106,13 @@ public final class HebcalFormatter {
 
     // MARK: - Holidays
 
+    /// Observances the watch deliberately omits, even when hebcal-swift
+    /// generates them: Yom Kippur Katan and Ta'anit BeHaB (Behab).
+    static func isHiddenOnWatch(_ ev: HEvent) -> Bool {
+        let desc = ev.desc.lowercased()
+        return desc.hasPrefix("yom kippur katan") || desc.contains("behab")
+    }
+
     /// Every holiday on `hdate` for this schedule (Israel or Diaspora).
     public func holidays(on hdate: HDate) -> [HEvent] {
         let year = hdate.yy
@@ -113,7 +120,7 @@ public final class HebcalFormatter {
         if let cached = holidayCache[year] {
             events = cached
         } else {
-            events = getAllHolidaysForYear(year: year)
+            events = getAllHolidaysForYear(year: year).filter { !Self.isHiddenOnWatch($0) }
             holidayCache[year] = events
         }
         return getHolidaysOnDate(events: events, hdate: hdate, il: settings.il)

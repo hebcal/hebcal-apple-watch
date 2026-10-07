@@ -121,6 +121,16 @@ extension HebcalWatchCoreTests {
             #expect(try short(.TISHREI, 5, specialShabbat: true) == "Sh. Shuva")
         }
 
+        @Test func hidesYomKippurKatanAndBehab() {
+            let hd = HDate(yy: 5787, mm: .TISHREI, dd: 1)
+            for desc in ["Yom Kippur Katan Cheshvan", "Ta'anit BeHaB", "Ta'anit Behab"] {
+                #expect(HebcalFormatter.isHiddenOnWatch(HEvent(hdate: hd, desc: desc, flags: .MINOR_FAST)))
+            }
+            for desc in ["Ta'anit Bechorot", "Tzom Gedaliah", "Yom Kippur"] {
+                #expect(!HebcalFormatter.isHiddenOnWatch(HEvent(hdate: hd, desc: desc, flags: .MINOR_FAST)))
+            }
+        }
+
         @Test func specialShabbatOnlyWhenRequested() {
             let weekdayBeforeShuva = HDate(yy: 5787, mm: .TISHREI, dd: 5)
             #expect(formatter().holidayToDisplay(on: weekdayBeforeShuva, specialShabbat: false) == nil)
@@ -257,7 +267,7 @@ extension HebcalWatchCoreTests {
             (2027, 3, 23, .en, .holidayWithEmoji("Purim", "🎭️📜")),
             (2026, 12, 7, .en, .emojiAbove("🕎", "Day 3")),
             (2026, 12, 7, .he, .twoLines("חנוכה", "3️⃣")),
-            (2027, 2, 22, .he, .parsha("כי תשא")),
+            (2027, 2, 23, .he, .parsha("כי תשא")),
             (2027, 3, 24, .en, .twoLines("Shushan", "Purim")),
         ])
         func parshaCircularLayout(y: Int, m: Int, d: Int, lang: TranslationLang, expected: ParshaCircularLayout) {

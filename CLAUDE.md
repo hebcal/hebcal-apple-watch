@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Apple Watch (watchOS) app for the Hebrew calendar: shows today's Hebrew date, upcoming holidays, and the weekly Torah portion, plus watch face complications. Distributed via the App Store and TestFlight. There is no companion iPhone app — the iPhone target is the required stub that ships the watch app.
 
 - Deployment targets: watchOS 10.6 (watch app and widget extension) / iOS 15.6 (iPhone stub). The app was migrated to watchOS 10 (single-target watch app) and its complications from ClockKit to WidgetKit.
-- Swift Package dependency: [`hebcal-swift`](https://github.com/hebcal/hebcal-swift) (`Hebcal` module, pinned to the `1.1.0` release). All Jewish calendar math — HDate, Sedra, holidays, daf yomi, translations, Hebrew numerals — comes from this package.
+- Swift Package dependency: [`hebcal-swift`](https://github.com/hebcal/hebcal-swift) (`Hebcal` module, pinned to the `1.1.1` release). All Jewish calendar math — HDate, Sedra, holidays, daf yomi, translations, Hebrew numerals — comes from this package.
 
 ## Build / test
 

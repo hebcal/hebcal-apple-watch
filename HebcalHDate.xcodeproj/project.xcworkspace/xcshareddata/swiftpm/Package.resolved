@@ -1,13 +1,13 @@
 {
-  "originHash" : "35bb08fd9385edc82e2d16a37d54e8df676f31a54ecfa27df39fc1c82d5c9127",
+  "originHash" : "0bd19c8a2b9e7adafb332f4db52b75bcf0ed98cc430362b8939db078dfd16393",
   "pins" : [
     {
       "identity" : "hebcal-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hebcal/hebcal-swift.git",
       "state" : {
-        "revision" : "e801cc4d860a74f451792a7607cdd6cb73a68a45",
-        "version" : "1.1.0"
+        "revision" : "a3701a5be3d2f0c3a9ae596451ed7dbdc34b29c0",
+        "version" : "1.1.1"
       }
     }
   ],

@@ -41,7 +41,7 @@ Legend: `A<br>B` two stacked lines · **bold** holiday name, large, no icon ·
 | Fri 2026-10-02 | 21 Tishrei | Hoshana<br>Raba | Hoshana<br>Raba | הושענא<br>רבה |
 | **Sat 2026-10-03** | 22 Tishrei | Shmini<br>Atz. | Shmini<br>Atz. | שמיני<br>עצרת |
 | Sun 2026-10-04 | 23 Tishrei | Sim.<br>Torah | Sim.<br>Torah | שמחת<br>תורה |
-| Mon 2026-10-05 | 24 Tishrei | Bere-<br>sheet | Bere-<br>shis | בראשית 📜 |
+| Mon 2026-10-05 | 24 Tishrei | Swords<br>of Iron War Memorial Day | Swords<br>of Iron War Memorial Day | יום<br>הזיכרון לחללי מלחמת חרבות ברזל |
 | Tue 2026-10-06 | 25 Tishrei | Bere-<br>sheet | Bere-<br>shis | בראשית 📜 |
 | Wed 2026-10-07 | 26 Tishrei | Bere-<br>sheet | Bere-<br>shis | בראשית 📜 |
 | Thu 2026-10-08 | 27 Tishrei | Bere-<br>sheet | Bere-<br>shis | בראשית 📜 |
@@ -181,7 +181,7 @@ Legend: `A<br>B` two stacked lines · **bold** holiday name, large, no icon ·
 | Fri 2027-02-19 | 12 Adar I | Tet-<br>zaveh | Tet-<br>zaveh | תצוה 📜 |
 | **Sat 2027-02-20** | 13 Adar I | Tet-<br>zaveh | Tet-<br>zaveh | תצוה 📜 |
 | Sun 2027-02-21 | 14 Adar I | Purim<br>Katan | Purim<br>Koton | פורים<br>קטן |
-| Mon 2027-02-22 | 15 Adar I | Ki<br>Tisa | Ki<br>Sisa | כי תשא 📜 |
+| Mon 2027-02-22 | 15 Adar I | Shushan<br>Purim Katan | Shushan<br>Purim Koton | שושן<br>פורים קטן |
 | Tue 2027-02-23 | 16 Adar I | Ki<br>Tisa | Ki<br>Sisa | כי תשא 📜 |
 | Wed 2027-02-24 | 17 Adar I | Ki<br>Tisa | Ki<br>Sisa | כי תשא 📜 |
 | Thu 2027-02-25 | 18 Adar I | Ki<br>Tisa | Ki<br>Sisa | כי תשא 📜 |

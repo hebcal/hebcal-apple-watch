@@ -18,7 +18,7 @@ let package = Package(
     dependencies: [
         // Same URL and version as the Xcode project's package reference, so
         // SwiftPM resolves both to a single copy.
-        .package(url: "https://github.com/hebcal/hebcal-swift.git", exact: "1.1.0"),
+        .package(url: "https://github.com/hebcal/hebcal-swift.git", exact: "1.1.1"),
     ],
     targets: [
         .target(
