@@ -53,6 +53,12 @@ struct MonthSummaryView: View {
             .foregroundColor(.secondary)
     }
 
+    private func hebrewMonthsText(_ text: String) -> some View {
+        Text(verbatim: text)
+            .foregroundColor(.secondary)
+            .font(.system(size: smallFontSize, weight: .regular, design: .default))
+    }
+
     var body: some View {
         HStack {
             if isHebrew {
@@ -62,9 +68,17 @@ struct MonthSummaryView: View {
             VStack(alignment: isHebrew ? .trailing : .leading, spacing: 0) {
                 Text(verbatim: month.title)
                     .font(.system(size: largeFontSize, weight: .regular, design: .default))
-                Text(verbatim: month.hebrewMonths)
-                    .foregroundColor(.secondary)
-                    .font(.system(size: smallFontSize, weight: .regular, design: .default))
+                // Full names at full size if they fit, else abbreviated, else
+                // abbreviated and shrunk to fit.
+                ViewThatFits(in: .horizontal) {
+                    hebrewMonthsText(month.hebrewMonths)
+                        .fixedSize(horizontal: true, vertical: false)
+                    if month.hebrewMonthsAbbrev != month.hebrewMonths {
+                        hebrewMonthsText(month.hebrewMonthsAbbrev)
+                            .fixedSize(horizontal: true, vertical: false)
+                    }
+                    hebrewMonthsText(month.hebrewMonthsAbbrev)
+                }
                 if !month.emoji.isEmpty {
                     // Thin spaces (U+2009): a full space spreads them too far.
                     Text(verbatim: month.emoji.joined(separator: "\u{2009}"))

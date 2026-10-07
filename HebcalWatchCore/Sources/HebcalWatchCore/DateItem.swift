@@ -87,16 +87,22 @@ public struct DateMonth: Hashable, Codable, Identifiable {
     /// The Hebrew months the whole Gregorian month spans: "Adar II – Nisan
     /// 5787", or "Elul 5786 – Tishrei 5787" across Rosh Hashana.
     public var hebrewMonths: String
+    /// `hebrewMonths` with the month names abbreviated ("Chesh – Kislev
+    /// 5787"), for when the full line doesn't fit. Same as `hebrewMonths`
+    /// when no name has an abbreviation.
+    public var hebrewMonthsAbbrev: String
     /// The emoji of the month's events in the order they occur, without
     /// repeats or the generic ✡️.
     public var emoji: [String]
     public var items: [DateItem]
 
     public init(id: Int, title: String, hebrewMonths: String = "",
+                hebrewMonthsAbbrev: String? = nil,
                 emoji: [String] = [], items: [DateItem]) {
         self.id = id
         self.title = title
         self.hebrewMonths = hebrewMonths
+        self.hebrewMonthsAbbrev = hebrewMonthsAbbrev ?? hebrewMonths
         self.emoji = emoji
         self.items = items
     }
@@ -244,6 +250,8 @@ extension HebcalFormatter {
                 let month = (isHebrew ? longMonthHe : longMonth)[c.month!]
                 months.append(DateMonth(id: id, title: "\(month) \(c.year!)",
                                         hebrewMonths: hebrewMonths(spanning: greg, calendar: calendar),
+                                        hebrewMonthsAbbrev: hebrewMonths(spanning: greg, calendar: calendar,
+                                                                         abbreviated: true),
                                         items: []))
             }
             months[months.count - 1].items.append(item)
@@ -259,11 +267,17 @@ extension HebcalFormatter {
     /// The Hebrew months that the Gregorian month of `date` spans, first
     /// and last: "Adar II – Nisan 5787", "Elul 5786 – Tishrei 5787", or
     /// just "Shevat 5787" if it falls within one.
-    func hebrewMonths(spanning date: Date, calendar: Calendar) -> String {
+    func hebrewMonths(spanning date: Date, calendar: Calendar, abbreviated: Bool = false) -> String {
         let interval = calendar.dateInterval(of: .month, for: date)!
         let first = HDate(date: interval.start, calendar: calendar)
         let last = HDate(date: interval.end.addingTimeInterval(-1), calendar: calendar)
-        func name(_ hdate: HDate) -> String { lookupTranslation(str: hdate.monthName(), lang: lang) }
+        func name(_ hdate: HDate) -> String {
+            let name = lookupTranslation(str: hdate.monthName(), lang: lang)
+            guard abbreviated, lang != .he, lang != .heNikud else {
+                return name
+            }
+            return (Abbreviations.month[Abbreviations.tableKey(name)] ?? nil) ?? name
+        }
         if first.yy != last.yy {
             return "\(name(first)) \(number(first.yy)) – \(name(last)) \(number(last.yy))"
         }

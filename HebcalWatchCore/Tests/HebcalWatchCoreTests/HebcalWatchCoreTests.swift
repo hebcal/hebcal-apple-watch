@@ -223,6 +223,10 @@ extension HebcalWatchCoreTests {
             #expect(list.months[3].title == "January 2027")
             #expect(list.months[3].hebrewMonths == "Tevet – Sh’vat 5787")
             #expect(list.months[3].emoji == ["🌒", "🌳", "🕍"])
+            // Cheshvan is abbreviated, Kislev has no short form.
+            #expect(list.months[1].hebrewMonths == "Cheshvan – Kislev 5787")
+            #expect(list.months[1].hebrewMonthsAbbrev == "Chesh – Kislev 5787")
+            #expect(list.months[3].hebrewMonthsAbbrev == "Tevet – Shvat 5787")
             // Pesach's 🫓 once, in order of first appearance.
             #expect(list.months[6].hebrewMonths == "Adar II – Nisan 5787")
             #expect(list.months[6].emoji == ["🕍", "🌒", "🇮🇱", "🫓", "🍷"])
@@ -238,6 +242,7 @@ extension HebcalWatchCoreTests {
             let he = formatter(.he).dateItemList(from: date(2026, 10, 7), calendar: calendar)
             #expect(he.months[3].title == "ינואר 2027")
             #expect(he.months[3].hebrewMonths == "טבת – שבט תשפ״ז")
+            #expect(he.months[3].hebrewMonthsAbbrev == he.months[3].hebrewMonths)
         }
     }
 }
