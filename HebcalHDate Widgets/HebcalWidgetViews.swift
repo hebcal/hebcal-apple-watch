@@ -95,14 +95,11 @@ struct HebcalWidgetEntryView: View {
             HebcalRectangularView(entry: entry)
         case .accessoryInline:
             // Progressively shorten the date; the parsha/holiday is kept
-            // whole. If even the tiniest month doesn't fit, ViewThatFits
-            // falls back to its last child, so repeat the un-abbreviated
-            // month there and let the system truncate the parsha instead.
+            // whole.
             ViewThatFits(in: .horizontal) {
                 Text(entry.inlineText)
                 Text(entry.inlineAbbrevText)
                 Text(entry.inlineTinyText)
-                Text(entry.inlineText)
             }
         default:
             // The Hebcal widget only declares rectangular+inline, but
